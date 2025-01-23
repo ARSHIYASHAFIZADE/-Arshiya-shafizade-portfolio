@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Preload } from "@react-three/drei";
@@ -28,7 +29,6 @@ const Stars = (props) => {
     // Filter out NaN values
     const validPositions = positions.filter((value) => !isNaN(value));
 
-    // Log an error if any NaN values were found
     if (validPositions.length !== positions.length) {
       console.error(
         "Invalid positions detected in sphere array. Filtering out NaN values."

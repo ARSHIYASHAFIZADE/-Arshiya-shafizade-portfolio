@@ -12,7 +12,6 @@ const Model = () => {
       child.castShadow = true;
       child.receiveShadow = true;
 
-      // Optional: Only fix NaN if necessary
       if (child.geometry?.attributes?.position) {
         const position = child.geometry.attributes.position;
         const array = position.array;
@@ -54,7 +53,7 @@ const SceneCanvas = () => {
 
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
-          enableZoom={false} // Disable zoom (including two-finger pinch)
+          enableZoom={false} 
           autoRotate={false}
           maxPolarAngle={Math.PI / 2.5}
           minPolarAngle={Math.PI / 3}

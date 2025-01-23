@@ -18,7 +18,7 @@ import {
   image,
   carrent,
   threejs,
-  render
+  render,
 } from "../assets";
 
 export const navLinks = [
@@ -29,10 +29,22 @@ export const navLinks = [
 ];
 
 const services = [
-  { title: "Web Developer", icon: "https://cdn2.iconfinder.com/data/icons/seo-and-web-development-filled-outline/64/Backend-Development-Website-Server-Internet-1024.png" },
-  { title: "Data Scientist", icon: "https://cdn-icons-png.flaticon.com/512/4824/4824797.png" },
-  { title: "Data visualizer", icon: "https://cdn2.iconfinder.com/data/icons/artifiial-intelligence/70/48_Data_Visualization-1024.png" },
-  { title: "Researcher", icon: "https://icon-library.com/images/research-icon-png/research-icon-png-9.jpg" },
+  {
+    title: "Web Developer",
+    icon: "https://cdn2.iconfinder.com/data/icons/seo-and-web-development-filled-outline/64/Backend-Development-Website-Server-Internet-1024.png",
+  },
+  {
+    title: "Data Scientist",
+    icon: "https://cdn-icons-png.flaticon.com/512/4824/4824797.png",
+  },
+  {
+    title: "Data visualizer",
+    icon: "https://cdn2.iconfinder.com/data/icons/artifiial-intelligence/70/48_Data_Visualization-1024.png",
+  },
+  {
+    title: "Researcher",
+    icon: "https://icon-library.com/images/research-icon-png/research-icon-png-9.jpg",
+  },
 ];
 
 const technologies = [
@@ -68,7 +80,7 @@ const experiences = [
   {
     title: "E-commerce Web Developer",
     company_name: "Arshiya Webstore",
-    icon: "https://static.vecteezy.com/system/resources/previews/016/017/018/large_2x/ecommerce-icon-free-png.png", 
+    icon: "https://static.vecteezy.com/system/resources/previews/016/017/018/large_2x/ecommerce-icon-free-png.png",
     iconBg: "#383E56",
     date: "November 2023 - December 2023",
     points: [
@@ -81,7 +93,7 @@ const experiences = [
   {
     title: "Game Developer",
     company_name: "Othello Game Project",
-    icon: "https://images.launchbox-app.com/81b5b418-a1a2-4daa-8986-6bfb1ea39b3f.png", 
+    icon: "https://images.launchbox-app.com/81b5b418-a1a2-4daa-8986-6bfb1ea39b3f.png",
     iconBg: "#383E56",
     date: "December 2024 - January 2025",
     points: [
@@ -94,7 +106,7 @@ const experiences = [
   {
     title: "AI Researcher",
     company_name: "Weed Detection System",
-    icon: "https://tse3.mm.bing.net/th?id=OIP.u8UxVZi9bSiuyhfhpe64HAHaHa&w=474&h=474&c=7", 
+    icon: "https://tse3.mm.bing.net/th?id=OIP.u8UxVZi9bSiuyhfhpe64HAHaHa&w=474&h=474&c=7",
     iconBg: "#383E56",
     date: "January 2025 - February 2025",
     points: [
@@ -107,7 +119,6 @@ const experiences = [
   },
 ];
 
-
 const testimonials = [
   {
     testimonial:
@@ -118,12 +129,12 @@ const testimonials = [
     image: image,
   },
   {
-    testimonial:
-      "CIMP Diploma",
+    testimonial: "CIMP Diploma",
     name: "Sunway University in sunway city-Malaysia",
     designation: "Student",
     company: "Sunway University",
-    image: "https://th.bing.com/th/id/R.e914efa552b34eeb7845d9042ec9d4e9?rik=7HX9fTJvjui1MQ&riu=http%3a%2f%2fwww.chooseright.org%2fwp-content%2fuploads%2f2014%2f04%2fSunway-University-logo.jpg&ehk=%2fQjLTJAyL2c5ul0ZQDjlIA6pI0z1GWNH5rhvRfLARzg%3d&risl=&pid=ImgRaw&r=0",
+    image:
+      "https://th.bing.com/th/id/R.e914efa552b34eeb7845d9042ec9d4e9?rik=7HX9fTJvjui1MQ&riu=http%3a%2f%2fwww.chooseright.org%2fwp-content%2fuploads%2f2014%2f04%2fSunway-University-logo.jpg&ehk=%2fQjLTJAyL2c5ul0ZQDjlIA6pI0z1GWNH5rhvRfLARzg%3d&risl=&pid=ImgRaw&r=0",
   },
   {
     testimonial:
@@ -131,7 +142,8 @@ const testimonials = [
     name: "Taylor's University in sunway city-Malaysia",
     designation: "Student",
     company: "Taylor's University",
-    image: "https://media.glassdoor.com/sqll/319279/taylor-s-university-college-squarelogo-1428399291142.png",
+    image:
+      "https://media.glassdoor.com/sqll/319279/taylor-s-university-college-squarelogo-1428399291142.png",
   },
 ];
 

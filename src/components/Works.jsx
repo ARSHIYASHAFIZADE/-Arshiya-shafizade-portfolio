@@ -6,14 +6,13 @@ import { SectionWrapper } from "../hoc";
 import { projects } from "../constants";
 import { fadeIn, textVariant } from "../utils/motion";
 
-
 const ProjectCard = ({
   index,
   name,
   description,
   tags,
   image,
-  icon, // Add icon to the parameters
+  icon, 
   source_code_link,
 }) => {
   return (
@@ -50,7 +49,7 @@ const ProjectCard = ({
               "
             >
               <img
-                src={icon} // Use the icon image
+                src={icon} 
                 alt="source code icon"
                 className="w-1/2 h-1/2 object-contain"
               />
@@ -99,7 +98,11 @@ const Works = () => {
           variants={fadeIn("", "", 0.2, 1)}
           className="mt-3 text-purple-200 text-[17px] max-w-3xl leading-[30px]"
         >
-          Explore a selection of projects that highlight my expertise in various technologies. Each project below is accompanied by a brief description and links to code repositories or live demos, demonstrating my ability to tackle challenges, adapt to new tools, and efficiently manage complex tasks.
+          Explore a selection of projects that highlight my expertise in various
+          technologies. Each project below is accompanied by a brief description
+          and links to code repositories or live demos, demonstrating my ability
+          to tackle challenges, adapt to new tools, and efficiently manage
+          complex tasks.
         </motion.p>
       </div>
 

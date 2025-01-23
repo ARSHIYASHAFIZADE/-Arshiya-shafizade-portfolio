@@ -1,3 +1,4 @@
+import React from "react";
 import { SectionWrapper } from "../hoc";
 import { useSwipeable } from "react-swipeable";
 import DV1 from "../assets/DV1.png";

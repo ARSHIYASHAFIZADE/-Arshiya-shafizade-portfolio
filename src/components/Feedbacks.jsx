@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-
 import { styles } from "../styles";
 import { SectionWrapper } from "../hoc";
 import { fadeIn, textVariant } from "../utils/motion";
@@ -98,9 +97,7 @@ const Feedbacks = () => {
             className="text-white text-5xl font-bold text-center bg-clip-text 
                        bg-gradient-to-r from-purple-300 to-blue-300 text-transparent 
                        drop-shadow-md"
-          >
-            
-          </h2>
+          ></h2>
         </motion.div>
 
         <motion.div
@@ -110,7 +107,11 @@ const Feedbacks = () => {
           viewport={{ once: true }}
         >
           {testimonials.map((testimonial, index) => (
-            <FeedbackCard key={testimonial.name} index={index} {...testimonial} />
+            <FeedbackCard
+              key={testimonial.name}
+              index={index}
+              {...testimonial}
+            />
           ))}
         </motion.div>
       </div>
