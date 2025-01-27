@@ -79,28 +79,15 @@ const experiences = [
   },
   {
     title: "E-commerce Web Developer",
-    company_name: "Arshiya Webstore",
+    company_name: "Webstore",
     icon: "https://static.vecteezy.com/system/resources/previews/016/017/018/large_2x/ecommerce-icon-free-png.png",
     iconBg: "#383E56",
     date: "November 2023 - December 2023",
     points: [
-      "Built and managed the Arshiya Webstore to learn about e-commerce development.",
+      "Built and managed the Webstore to learn about e-commerce development.",
       "Gained experience in managing products, creating product carts, and integrating payment systems.",
       "Designed and implemented features for user authentication and product filtering.",
       "Ensured a smooth user experience with responsive design and cross-browser compatibility.",
-    ],
-  },
-  {
-    title: "Game Developer",
-    company_name: "Othello Game Project",
-    icon: "https://images.launchbox-app.com/81b5b418-a1a2-4daa-8986-6bfb1ea39b3f.png",
-    iconBg: "#383E56",
-    date: "December 2024 - January 2025",
-    points: [
-      "Developed an Othello game in JavaFX, leveraging mathematical concepts and game logic.",
-      "Gained expertise in JavaFX and Scene Builder to create a visually appealing and functional game interface.",
-      "Implemented features like game saving and loading to enhance the user experience.",
-      "Learned about game development workflows, including handling game states and dynamic updates.",
     ],
   },
   {
@@ -115,6 +102,19 @@ const experiences = [
       "Implemented image segmentation techniques to isolate regions of interest for better analysis.",
       "Explored and experimented with various neural network architectures to achieve optimal results.",
       "Gained hands-on experience with training, testing, and fine-tuning neural networks for real-world applications.",
+    ],
+  },
+  {
+    title: "Game Developer",
+    company_name: "Othello Game Project",
+    icon: "https://images.launchbox-app.com/81b5b418-a1a2-4daa-8986-6bfb1ea39b3f.png",
+    iconBg: "#383E56",
+    date: "December 2024 - January 2025",
+    points: [
+      "Developed an Othello game in JavaFX, leveraging mathematical concepts and game logic.",
+      "Gained expertise in JavaFX and Scene Builder to create a visually appealing and functional game interface.",
+      "Implemented features like game saving and loading to enhance the user experience.",
+      "Learned about game development workflows, including handling game states and dynamic updates.",
     ],
   },
 ];
