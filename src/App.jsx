@@ -25,10 +25,10 @@ const App = () => {
         </div>
         <About />
         <Experience />
-        <Tech />
         <div className="relative z-10 overflow-visible">
           <Works />
         </div>
+        <Tech />
         <Feedbacks />
         <div className="relative z-0">
           <Contact />

@@ -19,27 +19,30 @@ import {
 } from "../assets";
 
 export const navLinks = [
-  { id: "about", title: "About" },
-  { id: "work", title: "Work" },
-  { id: "contact", title: "Contact" },
+  { id: "about",     title: "About"      },
+  { id: "work",      title: "Experience" },
+  { id: "projects",  title: "Projects"   },
+  { id: "stack",     title: "Stack"      },
+  { id: "education", title: "Education"  },
+  { id: "contact",   title: "Contact"    },
 ];
 
 const services = [
   {
-    title: "Web Developer",
+    title: "Full Stack Developer",
     icon: "https://cdn2.iconfinder.com/data/icons/seo-and-web-development-filled-outline/64/Backend-Development-Website-Server-Internet-1024.png",
   },
   {
-    title: "Data Scientist",
+    title: "AI / LLM Engineer",
+    icon: "https://cdn-icons-png.flaticon.com/512/8637/8637099.png",
+  },
+  {
+    title: "3D Creative Developer",
+    icon: "https://cdn-icons-png.flaticon.com/512/1728/1728765.png",
+  },
+  {
+    title: "ML Engineer",
     icon: "https://cdn-icons-png.flaticon.com/512/4824/4824797.png",
-  },
-  {
-    title: "Data visualizer",
-    icon: "https://cdn2.iconfinder.com/data/icons/artifiial-intelligence/70/48_Data_Visualization-1024.png",
-  },
-  {
-    title: "Researcher",
-    icon: "https://icon-library.com/images/research-icon-png/research-icon-png-9.jpg",
   },
 ];
 
@@ -52,12 +55,48 @@ const technologies = [
   { name: "Node.js", icon: nodejs },
   { name: "Python", icon: "https://cdn.worldvectorlogo.com/logos/python-5.svg" },
   { name: "FastAPI", icon: "https://cdn.worldvectorlogo.com/logos/fastapi-1.svg" },
-  { name: "PostgreSQL", icon: "https://cdn.worldvectorlogo.com/logos/postgresql.svg" },
+  { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" },
+  { name: "Redis", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg" },
+  { name: "Neo4j", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/neo4j/neo4j-original.svg" },
+  { name: "Milvus", icon: "https://avatars.githubusercontent.com/u/73219761?s=200&v=4" },
   { name: "Three.js", icon: threejs },
   { name: "Docker", icon: docker },
   { name: "Git", icon: git },
-  { name: "HTML 5", icon: html },
-  { name: "CSS 3", icon: css },
+  { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg", invert: true },
+  { name: "Claude Code", icon: "https://avatars.githubusercontent.com/u/76263028?s=200&v=4" },
+];
+
+const workExperiences = [
+  {
+    title: "Full Stack & AI Engineer",
+    company_name: "Coolriots — BeX Platform",
+    icon: "/coolriots.png",
+    iconBg: "#060e1a",
+    date: "2025",
+    points: [
+      "Worked across a 600-file / 102K LOC React + TypeScript SPA and 290-file / 28K LOC Express backend for BeX, an enterprise AI business execution platform for multi-tenant SaaS.",
+      "Designed the OpCode V2 CPIE schema — a JSON workflow language with step types (llm, api, memory, rag, subflow, choose), OEL expression syntax (@input.*, @step_id.*), conditional routing, and memory-augmented conversation threading backed by Redis.",
+      "Integrated 8+ LLM providers (OpenAI, Groq, Google Gemini, IBM WatsonX, Mistral, SambaNova, Cerebras, Novita) with per-step model selection and WebSocket token streaming to the frontend.",
+      "Built multi-tenant provisioning: organization lifecycle with Redis/Milvus namespace cloning, IBM Cloud Broker (OSB v2.12), Azure AD SSO via Passport.js, and role-based access across orgs and sub-orgs.",
+      "Integrated Stripe subscriptions, Soul Machines 3D AI avatar SDK, Milvus/Zilliz vector database, Elasticsearch, IBM Cloud Object Storage, and HashiCorp Vault for secrets management.",
+      "Shipped Playwright E2E tests against staging, enforced quality with ESLint + Husky pre-commit hooks, and deployed via GitOps (ArgoCD image updates + GitHub Actions).",
+    ],
+  },
+  {
+    title: "Frontend Developer",
+    company_name: "LeadAlways — ECM",
+    icon: "/leadalways.png",
+    iconBg: "#0d1a2e",
+    date: "2024 – 2025",
+    points: [
+      "Built the full React + TypeScript frontend for LeadAlways ECM (edms.leadalways.tech), a production enterprise document management platform.",
+      "Designed a visual workflow builder with approval engine, scheduling with timezone support, webhook triggers, and conditional metadata logic.",
+      "Developed a dynamic form builder with drag-and-drop field types, conditional visibility rules, and real-time submission handling.",
+      "Integrated Google Gemini AI SDK for document processing assistance and intelligent content suggestions within the editor.",
+      "Built 30+ admin configuration modules covering LDAP, document encryption, external storage, federation, background jobs, and e-signature (Libresign/eSign).",
+      "Implemented full i18n support with i18next and configured Docker + Nginx deployment with a GitLab CI/CD pipeline.",
+    ],
+  },
 ];
 
 const experiences = [
@@ -129,8 +168,7 @@ const testimonials = [
     name: "Sunway University in sunway city-Malaysia",
     designation: "Student",
     company: "Sunway University",
-    image:
-      "https://th.bing.com/th/id/R.e914efa552b34eeb7845d9042ec9d4e9?rik=7HX9fTJvjui1MQ&riu=http%3a%2f%2fwww.chooseright.org%2fwp-content%2fuploads%2f2014%2f04%2fSunway-University-logo.jpg&ehk=%2fQjLTJAyL2c5ul0ZQDjlIA6pI0z1GWNH5rhvRfLARzg%3d&risl=&pid=ImgRaw&r=0",
+    image: "/sunway-logo.jpg",
   },
   {
     testimonial:
@@ -145,61 +183,65 @@ const testimonials = [
 
 const projects = [
   {
-    name: "Ashxcribe",
-    description:
-      "Multi-tenant SCRUM standup platform that records meetings, transcribes them in real-time with Groq Whisper, and generates AI-powered SCRUM documents. Supports multi-company workspaces, custom templates, and PDF/DOCX export.",
-    tags: [
-      { name: "Next.js", color: "blue-text-gradient" },
-      { name: "Supabase", color: "green-text-gradient" },
-      { name: "Groq AI", color: "pink-text-gradient" },
-      { name: "Tailwind", color: "blue-text-gradient" },
-    ],
-    image: "https://image.thum.io/get/width/400/crop/230/https://scrum-tassk-automation.vercel.app",
-    icon: render,
-    source_code_link: "https://scrum-tassk-automation.vercel.app",
-  },
-  {
     name: "The Neon Canopy",
+    accent: "#06b6d4",
     description:
       "An immersive 3D bioluminescent jungle experience featuring six mythical creatures with cinematic visuals, procedural audio synthesis, and a five-phase animated introduction. Built with Three.js, React Three Fiber, and advanced post-processing effects.",
     tags: [
-      { name: "Three.js", color: "blue-text-gradient" },
-      { name: "Next.js", color: "green-text-gradient" },
-      { name: "Framer Motion", color: "pink-text-gradient" },
-      { name: "TypeScript", color: "blue-text-gradient" },
+      { name: "Three.js" },
+      { name: "Next.js" },
+      { name: "Framer Motion" },
+      { name: "TypeScript" },
     ],
-    image: "https://image.thum.io/get/width/400/crop/230/https://my-jungle-seven.vercel.app",
-    icon: render,
+    image: "/canopy.png",
+    icon: "https://cdn.simpleicons.org/vercel/ffffff",
     source_code_link: "https://my-jungle-seven.vercel.app",
   },
   {
+    name: "Ashxcribe",
+    accent: "#8b5cf6",
+    description:
+      "Multi-tenant SCRUM standup platform that records meetings, transcribes them in real-time with Groq Whisper, and generates AI-powered SCRUM documents. Supports multi-company workspaces, custom templates, and PDF/DOCX export.",
+    tags: [
+      { name: "Next.js" },
+      { name: "Supabase" },
+      { name: "Groq AI" },
+      { name: "Tailwind" },
+    ],
+    image: "/task_automation.jpeg",
+    icon: "https://cdn.simpleicons.org/vercel/ffffff",
+    source_code_link: "https://scrum-tassk-automation.vercel.app",
+  },
+  {
     name: "ALF — Ash Loves Files",
+    accent: "#f97316",
     description:
       "Universal file converter supporting 120+ formats across 8 categories including image, document, audio, video, ebook, archive, data, and font. Free, no sign-up required. Built with a FastAPI backend, Celery task queue, and Docker containerization.",
     tags: [
-      { name: "Next.js", color: "blue-text-gradient" },
-      { name: "FastAPI", color: "green-text-gradient" },
-      { name: "Python", color: "pink-text-gradient" },
-      { name: "Docker", color: "blue-text-gradient" },
+      { name: "Next.js" },
+      { name: "FastAPI" },
+      { name: "Python" },
+      { name: "Docker" },
     ],
-    image: "https://image.thum.io/get/width/400/crop/230/https://frontend-production-2bfcc.up.railway.app",
-    icon: render,
+    image: "https://image.thum.io/get/width/1280/crop/720/noanimate/https://frontend-production-2bfcc.up.railway.app",
+    icon: "https://cdn.simpleicons.org/railway/ffffff",
     source_code_link: "https://frontend-production-2bfcc.up.railway.app",
   },
   {
     name: "SAM AI — Clinical Diagnostics",
+    accent: "#3b82f6",
     description:
       "AI-powered clinical diagnostic platform with five ML models screening for heart disease, diabetes, liver disease, and breast cancer. Returns risk scores with confidence intervals in under one second. Includes a medical Q&A chatbot powered by Mistral-7B.",
     tags: [
-      { name: "Next.js", color: "blue-text-gradient" },
-      { name: "Flask", color: "green-text-gradient" },
-      { name: "scikit-learn", color: "pink-text-gradient" },
-      { name: "Mistral-7B", color: "blue-text-gradient" },
+      { name: "Next.js" },
+      { name: "Flask" },
+      { name: "scikit-learn" },
+      { name: "Mistral-7B" },
     ],
-    image: "https://image.thum.io/get/width/400/crop/230/https://frontend-production-0b91.up.railway.app",
-    icon: render,
+    image: "/sam.jpeg",
+    icon: "https://cdn.simpleicons.org/railway/ffffff",
     source_code_link: "https://frontend-production-0b91.up.railway.app",
   },
 ];
 
-export { services, technologies, experiences, testimonials, projects };
+export { services, technologies, workExperiences, experiences, testimonials, projects };

@@ -30,40 +30,38 @@ const FeedbackCard = ({
       initial="initial"
       animate="animate"
       whileHover="hover"
-      className="relative p-10 rounded-3xl w-full max-w-[320px]
+      className="relative p-5 rounded-2xl w-full max-w-[270px]
+                 flex flex-col justify-between
                  bg-[rgba(25,25,60,0.7)] backdrop-blur-lg
                  border border-[rgba(255,255,255,0.15)]
                  hover:shadow-xl hover:shadow-purple-500/30
-                 transition-shadow duration-500 ease-in-out
-                 cursor-pointer"
-      style={{ boxShadow: "0 10px 30px rgba(0,0,0,0.3)" }}
+                 transition-shadow duration-500 ease-in-out"
+      style={{ boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}
     >
-      <p className="text-white font-extrabold text-[48px] leading-none">"</p>
-      <div className="mt-1">
-        <p className="text-white tracking-wider text-[18px] italic">
+      <div className="flex-1">
+        <p className="text-purple-400 font-extrabold text-[36px] leading-none">"</p>
+        <p className="text-white/90 text-[13px] leading-relaxed mt-1">
           {testimonial}
         </p>
+      </div>
 
-        <div className="mt-7 flex justify-between items-center gap-1">
-          <div className="flex flex-col">
-            <p className="text-white font-semibold text-[16px]">
-              <span className="text-purple-400">@</span> {name}
-            </p>
-            <p className="mt-1 text-purple-200 text-[12px]">
-              {designation} of {company}
-            </p>
-          </div>
-
-          <div
-            className="w-12 h-12 rounded-full overflow-hidden border-2 border-purple-400 flex-shrink-0"
-            style={{ boxShadow: "0 0 10px rgba(128,90,213,0.5)" }}
-          >
-            <img
-              src={image}
-              alt={`feedback_by-${name}`}
-              className="w-full h-full object-cover"
-            />
-          </div>
+      <div className="mt-4 flex items-center gap-3 border-t border-[rgba(255,255,255,0.08)] pt-4">
+        <div
+          className="w-10 h-10 rounded-full overflow-hidden border border-purple-400/60 flex-shrink-0 bg-[rgba(255,255,255,0.05)]"
+        >
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="min-w-0">
+          <p className="text-white font-semibold text-[13px] leading-snug">
+            {name}
+          </p>
+          <p className="text-purple-300 text-[11px] leading-snug">
+            {designation} · {company}
+          </p>
         </div>
       </div>
     </motion.div>
@@ -129,17 +127,17 @@ const GitHubActivityCard = () => (
           <p className="text-purple-300 text-[11px] uppercase tracking-wider mb-2">Achievements</p>
           <div className="flex flex-wrap gap-2">
             {[
-              { emoji: "🥦", label: "Pair Extraordinaire ×3" },
-              { emoji: "🪃", label: "YOLO" },
-              { emoji: "🦈", label: "Pull Shark ×2" },
-              { emoji: "🤠", label: "Starstruck" },
-            ].map(({ emoji, label }) => (
+              { img: "https://github.githubassets.com/images/modules/profile/achievements/pair-extraordinaire-default.png", label: "Pair Extraordinaire ×3" },
+              { img: "https://github.githubassets.com/images/modules/profile/achievements/yolo-default.png", label: "YOLO" },
+              { img: "https://github.githubassets.com/images/modules/profile/achievements/pull-shark-default.png", label: "Pull Shark ×2" },
+              { img: "https://github.githubassets.com/images/modules/profile/achievements/starstruck-default.png", label: "Starstruck" },
+            ].map(({ img, label }) => (
               <div
                 key={label}
                 title={label}
-                className="w-9 h-9 rounded-full bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.15)] flex items-center justify-center text-lg hover:bg-purple-600/30 hover:border-purple-400/50 transition-colors duration-200 cursor-default"
+                className="w-10 h-10 rounded-full overflow-hidden border border-[rgba(255,255,255,0.15)] hover:border-purple-400/50 transition-colors duration-200 cursor-default"
               >
-                {emoji}
+                <img src={img} alt={label} className="w-full h-full object-cover" />
               </div>
             ))}
           </div>
@@ -169,11 +167,13 @@ const Feedbacks = () => {
           <p className="text-purple-200 uppercase tracking-wider text-sm mb-2">
             More of me
           </p>
-          <h2 className="text-white text-5xl font-bold text-center bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300 text-transparent drop-shadow-md" />
+          <h2 className="text-white text-5xl font-bold text-center bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300 text-transparent drop-shadow-md">
+              Education &amp; Achievements.
+            </h2>
         </motion.div>
 
         <motion.div
-          className={`-mt-20 ${styles.paddingX} flex flex-wrap gap-7 justify-center`}
+          className={`-mt-20 ${styles.paddingX} flex flex-wrap gap-7 justify-center items-stretch`}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
@@ -192,4 +192,4 @@ const Feedbacks = () => {
   );
 };
 
-export default SectionWrapper(Feedbacks, "");
+export default SectionWrapper(Feedbacks, "education");
