@@ -162,12 +162,12 @@ const Feedbacks = () => {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className={`bg-[rgba(0,0,0,0.6)] rounded-2xl p-10 min-h-[300px] ${styles.flexCenter} flex-col`}
+          className={`bg-[rgba(0,0,0,0.6)] rounded-2xl p-6 sm:p-10 min-h-[300px] ${styles.flexCenter} flex-col`}
         >
-          <p className="text-purple-200 uppercase tracking-wider text-sm mb-2">
+          <p className="text-purple-200 uppercase tracking-wider text-xs sm:text-sm mb-2 px-4">
             More of me
           </p>
-          <h2 className="text-white text-5xl font-bold text-center bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300 text-transparent drop-shadow-md">
+          <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-bold text-center bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300 text-transparent drop-shadow-md px-4 word-wrap break-words">
               Education &amp; Achievements.
             </h2>
         </motion.div>

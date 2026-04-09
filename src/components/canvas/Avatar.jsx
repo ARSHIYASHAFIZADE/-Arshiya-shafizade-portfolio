@@ -44,6 +44,9 @@ const Computers = ({ isMobile }) => {
     }
   });
 
+  // Scale down on mobile devices
+  const scale = isMobile ? [1.2, 1.2, 1.2] : [2, 2, 2];
+
   // Set initial rotation to look left when loaded
   useEffect(() => {
     if (modelRef.current) {
@@ -55,7 +58,7 @@ const Computers = ({ isMobile }) => {
   useFrame(() => {
     if (modelRef.current) {
       modelRef.current.rotation.y += 0.005;
-      modelRef.current.scale.set(2, 2, 2);
+      modelRef.current.scale.set(...scale);
     }
   });
 
@@ -66,7 +69,7 @@ const Computers = ({ isMobile }) => {
         position={[0, -1.5, 0]}
         rotation={[-0.01, 0, 0]}
         material={{ color: "#FFFFFF" }}
-        scale={[2, 2, 2]}
+        scale={scale}
       />
       <meshStandardMaterial attach="shadow" color="#000000" />
     </mesh>
@@ -112,7 +115,10 @@ const ComputersCanvas = () => {
         frameloop="always"
         shadows
         dpr={[1, 2]}
-        camera={{ position: [10, 5, 10], fov: 35 }}
+        camera={{
+          position: isMobile ? [8, 4, 8] : [10, 5, 10],
+          fov: isMobile ? 40 : 35
+        }}
         gl={{ preserveDrawingBuffer: true, antialias: true }}
         className="z-10"
         onCreated={({ gl }) => {

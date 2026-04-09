@@ -5,7 +5,7 @@ import { AvatarCanvas} from "./canvas";
 
 const Hero = () => {
   return (
-    <section className={`relative w-full h-screen mx-auto overflow-hidden`}>
+    <section className={`relative w-full h-screen md:h-screen sm:min-h-[600px] min-h-[500px] mx-auto overflow-hidden`}>
       <div
         className={`absolute inset-0 top-[120px] max-w-7xl mx-auto ${styles.paddingX} flex flex-row items-start gap-5 ml-0 z-20 pointer-events-none`}
       >
