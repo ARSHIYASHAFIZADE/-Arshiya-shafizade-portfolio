@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Html, useProgress } from "@react-three/drei";
-const CanvasLoader = () => {
+
+const CanvasLoader = memo(() => {
   const { progress } = useProgress();
   return (
     <Html
@@ -26,6 +27,8 @@ const CanvasLoader = () => {
       </p>
     </Html>
   );
-};
+});
+
+CanvasLoader.displayName = 'CanvasLoader';
 
 export default CanvasLoader;
