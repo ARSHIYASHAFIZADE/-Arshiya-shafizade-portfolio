@@ -1,8 +1,0 @@
-Model Information:
-* title:	Iphone 15 Pro Max
-* source:	https://sketchfab.com/3d-models/iphone-15-pro-max-4ec1f531d3054a7cb55e52ccd38b895d
-* author:	Mindplace (https://sketchfab.com/Mindplace)
-
-Model License:
-* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
-* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
