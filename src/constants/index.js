@@ -61,9 +61,14 @@ const technologies = [
   { name: "Milvus", icon: "https://avatars.githubusercontent.com/u/73219761?s=200&v=4" },
   { name: "Three.js", icon: threejs },
   { name: "Docker", icon: docker },
+  { name: "Kubernetes", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-plain.svg" },
+  { name: "OpenShift", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/openshift/openshift-plain.svg" },
+  { name: "IBM Cloud", icon: "https://cdn.simpleicons.org/ibmcloud/1d70b8" },
+  { name: "Vault", icon: "https://cdn.simpleicons.org/vault/ffd814" },
+  { name: "Elasticsearch", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/elasticsearch/elasticsearch-original.svg" },
+  { name: "ArgoCD", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/argocd/argocd-original.svg" },
   { name: "Git", icon: git },
   { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg", invert: true },
-  { name: "Claude Code", icon: "https://avatars.githubusercontent.com/u/76263028?s=200&v=4" },
 ];
 
 const workExperiences = [
