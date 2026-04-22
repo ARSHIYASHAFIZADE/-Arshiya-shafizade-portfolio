@@ -35,12 +35,7 @@ const Computers = ({ isMobile }) => {
   scene.traverse((node) => {
     if (node.isMesh && node.material && node.material.map) {
       // Three.js r152+: colorSpace instead of encoding
-      if (node.material.map.colorSpace) {
-        node.material.map.colorSpace = THREE.SRGBColorSpace;
-      } else if (THREE.sRGBEncoding) {
-        // Fallback for older Three.js versions
-        node.material.map.encoding = THREE.sRGBEncoding;
-      }
+      node.material.map.colorSpace = THREE.SRGBColorSpace;
     }
   });
 
