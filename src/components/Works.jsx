@@ -19,7 +19,7 @@ const TECH = {
   "Docker":        { color: "#60a5fa", bg: "rgba(96,165,250,0.08)",  border: "rgba(96,165,250,0.26)"  },
   "Flask":         { color: "#cbd5e1", bg: "rgba(203,213,225,0.07)", border: "rgba(203,213,225,0.18)" },
   "scikit-learn":  { color: "#fb923c", bg: "rgba(251,146,60,0.08)",  border: "rgba(251,146,60,0.28)"  },
-  "Mistral-7B":    { color: "#a78bfa", bg: "rgba(167,139,250,0.08)", border: "rgba(167,139,250,0.26)" },
+  "Llama 3.3":     { color: "#a78bfa", bg: "rgba(167,139,250,0.08)", border: "rgba(167,139,250,0.26)" },
 };
 const fallbackTech = { color: "#a78bfa", bg: "rgba(167,139,250,0.08)", border: "rgba(167,139,250,0.26)" };
 
@@ -413,7 +413,7 @@ const ProjectCard = ({ project, index }) => {
           >
             <img src={project.icon} alt="platform" className="w-5 h-5 object-contain" />
             <span className="text-white text-[12px] font-semibold tracking-wide">
-              {project.icon.includes("vercel") ? "Vercel" : "Railway"}
+              {project.icon.includes("vercel") ? "Vercel" : project.icon.includes("github") ? "GitHub" : "Railway"}
             </span>
           </div>
 

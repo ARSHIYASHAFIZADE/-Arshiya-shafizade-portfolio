@@ -142,14 +142,14 @@ const experiences = [
   {
     title: "AI / ML Developer",
     company_name: "SAM AI",
-    icon: "https://image.thum.io/get/width/100/crop/100/https://frontend-production-0b91.up.railway.app",
+    icon: "https://image.thum.io/get/width/100/crop/100/https://github.com/ARSHIYASHAFIZADE/SamAI",
     iconBg: "#0a1a2e",
     date: "2024",
     points: [
-      "Developed an AI clinical diagnostic platform with five scikit-learn ML models screening for heart disease, diabetes, liver disease, and breast cancer.",
-      "Integrated Hugging Face Mistral-7B for a medical Q&A chatbot with clinical context awareness.",
-      "Built automated PDF report generation for diagnostic results and risk scores with confidence intervals.",
-      "Deployed on Railway with a Next.js frontend, Flask backend, Redis for session management, and PostgreSQL database.",
+      "Developed an AI clinical diagnostic platform with five scikit-learn ML models screening for heart disease, female and male diabetes, liver disease, and breast cancer.",
+      "Integrated Groq / Llama 3.3-70B for a real-time medical Q&A chatbot with clinical context awareness.",
+      "Generates client-side PDF diagnostic reports with jsPDF covering risk scores, confidence intervals, and clinical recommendations.",
+      "Built a professional pytest integration test suite covering all five prediction endpoints and full auth flow on an in-memory SQLite database.",
     ],
   },
 ];
@@ -231,16 +231,16 @@ const projects = [
     name: "SAM AI — Clinical Diagnostics",
     accent: "#3b82f6",
     description:
-      "AI-powered clinical diagnostic platform with five ML models screening for heart disease, diabetes, liver disease, and breast cancer. Returns risk scores with confidence intervals in under one second. Includes a medical Q&A chatbot powered by Mistral-7B.",
+      "AI-powered clinical diagnostic platform with five ML models screening for heart disease, diabetes, liver disease, and breast cancer. Returns risk scores with confidence intervals in under one second. Includes a medical Q&A chatbot powered by Groq / Llama 3.3-70B.",
     tags: [
       { name: "Next.js" },
       { name: "Flask" },
       { name: "scikit-learn" },
-      { name: "Mistral-7B" },
+      { name: "Llama 3.3" },
     ],
     image: "/sam.jpeg",
-    icon: "https://cdn.simpleicons.org/railway/ffffff",
-    source_code_link: "https://frontend-production-0b91.up.railway.app",
+    icon: "https://cdn.simpleicons.org/github/ffffff",
+    source_code_link: "https://github.com/ARSHIYASHAFIZADE/SamAI",
   },
 ];
 
