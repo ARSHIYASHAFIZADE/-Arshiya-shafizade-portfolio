@@ -62,8 +62,8 @@ const technologies = [
   { name: "Three.js", icon: threejs },
   { name: "Docker", icon: docker },
   { name: "Kubernetes", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-plain.svg" },
-  { name: "OpenShift", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/openshift/openshift-plain.svg" },
-  { name: "IBM Cloud", icon: "https://cdn.simpleicons.org/ibmcloud/1d70b8" },
+  { name: "OpenShift", icon: "https://cdn.simpleicons.org/redhatopenshift/EE0000" },
+  { name: "IBM Cloud", icon: "https://cdn.simpleicons.org/ibm/006699" },
   { name: "Vault", icon: "https://cdn.simpleicons.org/vault/ffd814" },
   { name: "Elasticsearch", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/elasticsearch/elasticsearch-original.svg" },
   { name: "ArgoCD", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/argocd/argocd-original.svg" },
@@ -163,30 +163,6 @@ const experiences = [
 const testimonials = [
   {
     testimonial:
-      "Certified in Claude 101 — foundational course covering Claude AI capabilities, prompt engineering, and effective human-AI collaboration patterns.",
-    name: "Claude 101",
-    designation: "Certificate of Completion",
-    company: "Anthropic",
-    image: "https://avatars.githubusercontent.com/u/76263028?s=200&v=4",
-  },
-  {
-    testimonial:
-      "Certified in Claude Code 101 — fundamentals of AI-assisted software development using Claude Code CLI, agentic tool use, and automated engineering workflows.",
-    name: "Claude Code 101",
-    designation: "Certificate of Completion",
-    company: "Anthropic",
-    image: "https://avatars.githubusercontent.com/u/76263028?s=200&v=4",
-  },
-  {
-    testimonial:
-      "Certified in Claude Code in Action — advanced practitioner course applying Claude Code to real engineering workflows, multi-step automation, and production codebases.",
-    name: "Claude Code in Action",
-    designation: "Certificate of Completion",
-    company: "Anthropic",
-    image: "https://avatars.githubusercontent.com/u/76263028?s=200&v=4",
-  },
-  {
-    testimonial:
       "Research and Publications: Co-authored research on Diagnosis of Breast Cancer Tumor Type, using AI to enhance diagnostic accuracy through a fuzzy combination of regression methods.",
     name: "Research and Publications",
     designation: "Developer & Researcher",
@@ -208,6 +184,30 @@ const testimonials = [
     company: "Taylor's University",
     image:
       "https://media.glassdoor.com/sqll/319279/taylor-s-university-college-squarelogo-1428399291142.png",
+  },
+  {
+    testimonial:
+      "Certified in Claude 101 — foundational course covering Claude AI capabilities, prompt engineering, and effective human-AI collaboration patterns.",
+    name: "Claude 101",
+    designation: "Certificate of Completion",
+    company: "Anthropic",
+    image: "https://avatars.githubusercontent.com/u/76263028?s=200&v=4",
+  },
+  {
+    testimonial:
+      "Certified in Claude Code 101 — fundamentals of AI-assisted software development using Claude Code CLI, agentic tool use, and automated engineering workflows.",
+    name: "Claude Code 101",
+    designation: "Certificate of Completion",
+    company: "Anthropic",
+    image: "https://avatars.githubusercontent.com/u/76263028?s=200&v=4",
+  },
+  {
+    testimonial:
+      "Certified in Claude Code in Action — advanced practitioner course applying Claude Code to real engineering workflows, multi-step automation, and production codebases.",
+    name: "Claude Code in Action",
+    designation: "Certificate of Completion",
+    company: "Anthropic",
+    image: "https://avatars.githubusercontent.com/u/76263028?s=200&v=4",
   },
 ];
 
@@ -253,9 +253,9 @@ const projects = [
       { name: "Python" },
       { name: "Docker" },
     ],
-    image: "https://image.thum.io/get/width/1280/crop/720/noanimate/https://frontend-production-2bfcc.up.railway.app",
-    icon: "https://cdn.simpleicons.org/railway/ffffff",
-    source_code_link: "https://frontend-production-2bfcc.up.railway.app",
+    image: "https://image.thum.io/get/width/1280/crop/720/noanimate/https://github.com/ARSHIYASHAFIZADE/ALF",
+    icon: "https://cdn.simpleicons.org/github/ffffff",
+    source_code_link: "https://github.com/ARSHIYASHAFIZADE/ALF",
   },
   {
     name: "SAM AI — Clinical Diagnostics",

@@ -4,12 +4,17 @@ import { technologies } from "../constants";
 
 const TechCard = ({ icon, name, invert }) => {
   return (
-    <div className="w-28 h-28 bg-[#232631] rounded-lg shadow-md flex justify-center items-center">
-      <img
-        src={icon}
-        alt={name}
-        className={`w-[60%] h-[60%] object-contain${invert ? " invert" : ""}`}
-      />
+    <div className="flex flex-col items-center gap-2">
+      <div className="w-28 h-28 bg-[#232631] rounded-lg shadow-md flex justify-center items-center">
+        <img
+          src={icon}
+          alt={name}
+          className={`w-[60%] h-[60%] object-contain${invert ? " invert" : ""}`}
+        />
+      </div>
+      <p className="text-white/60 text-[10.5px] font-mono text-center leading-tight tracking-wide">
+        {name}
+      </p>
     </div>
   );
 };
