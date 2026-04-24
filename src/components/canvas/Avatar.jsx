@@ -156,6 +156,7 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
       const clip = mixer.clipAction(action);
       clip.setLoop(THREE.LoopOnce);
       clip.clampWhenFinished = true;
+      clip.timeScale = 1.5;
 
       clip.play();
 
@@ -382,7 +383,7 @@ const ComputersCanvas = () => {
             opacity={0.45}
             scale={6}
             blur={2.4}
-            far={2}
+            far={4}
           />
           <OrbitControls
             enableZoom={false}
