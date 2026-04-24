@@ -23,10 +23,17 @@ const CanvasErrorFallback = ({ error, resetErrorBoundary }) => (
   <WebGLFallback />
 );
 
-const Computers = ({ isMobile, viseme }) => {
+const Computers = ({ isMobile, viseme, onModelLoaded }) => {
   const { scene } = useGLTF("./Avatar/6756e17a1aa3af1c627b3bec.glb");
   const modelRef = useRef();
   const headRef = useRef();
+
+  // Notify parent when model loads
+  useEffect(() => {
+    if (scene) {
+      onModelLoaded?.();
+    }
+  }, [scene, onModelLoaded]);
 
   // Check for model loading errors
   if (!scene) {
@@ -91,8 +98,9 @@ const Computers = ({ isMobile, viseme }) => {
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [webglSupported, setWebglSupported] = useState(true);
   const [viseme, setViseme] = useState(0);
+  const [modelLoaded, setModelLoaded] = useState(false);
+  const [webglSupported, setWebglSupported] = useState(true);
 
   useEffect(() => {
     // Check WebGL support
@@ -121,6 +129,11 @@ const ComputersCanvas = () => {
         <WebGLFallback />
       </div>
     );
+  }
+
+  // Only show chat UI when model is loaded
+  if (!modelLoaded) {
+    return null;
   }
 
   return (
@@ -152,7 +165,7 @@ const ComputersCanvas = () => {
             minPolarAngle={Math.PI / 3}
             rotateSpeed={0.5}
           />
-          <Computers isMobile={isMobile} viseme={viseme} />
+          <Computers isMobile={isMobile} viseme={viseme} onModelLoaded={() => setModelLoaded(true)} />
         </Suspense>
         <Preload all />
       </Canvas>
