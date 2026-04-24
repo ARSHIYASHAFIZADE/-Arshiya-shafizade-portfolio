@@ -39,8 +39,8 @@ const Computers = ({ isMobile }) => {
     }
   });
 
-  // Scale down on mobile devices
-  const scale = isMobile ? [1.2, 1.2, 1.2] : [2, 2, 2];
+  // Scale: bigger on desktop, smaller on mobile
+  const scale = isMobile ? [3, 3, 3] : [1.5, 1.5, 1.5];
 
   // Set initial rotation to look left when loaded
   useEffect(() => {
@@ -111,8 +111,8 @@ const ComputersCanvas = () => {
         shadows
         dpr={[1, 2]}
         camera={{
-          position: isMobile ? [8, 4, 8] : [10, 5, 10],
-          fov: isMobile ? 40 : 35
+          position: isMobile ? [10, 5, 10] : [8, 4, 8],
+          fov: isMobile ? 35 : 40
         }}
         gl={{ preserveDrawingBuffer: true, antialias: true }}
         className="z-10"
