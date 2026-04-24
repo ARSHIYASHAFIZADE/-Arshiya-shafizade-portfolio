@@ -79,7 +79,7 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
 
   // Scale: bigger on desktop, smaller on mobile
   const scale = isMobile ? [1.5, 1.5, 1.5] : [1.3, 1.3, 1.3];
-  const modelY = isMobile ? -4.5 : -4.2;
+  const modelY = isMobile ? -1.6 : -1.5;
 
   // Set initial rotation to look left when loaded
   useEffect(() => {
@@ -168,8 +168,8 @@ const ComputersCanvas = () => {
         shadows
         dpr={[1, 2]}
         camera={{
-          position: isMobile ? [0, -1.2, 5] : [0, -1.4, 4.5],
-          fov: isMobile ? 65 : 70
+          position: isMobile ? [0, 0.2, 3.5] : [0, 0.2, 3.2],
+          fov: isMobile ? 35 : 30
         }}
         gl={{ preserveDrawingBuffer: true, antialias: true }}
         className="z-10 w-full h-screen"
@@ -186,6 +186,8 @@ const ComputersCanvas = () => {
         <Suspense fallback={<CanvasLoader />}>
           <OrbitControls
             enableZoom={false}
+            enablePan={false}
+            target={[0, 0.2, 0]}
             maxPolarAngle={Math.PI / 2}
             minPolarAngle={Math.PI / 3}
             rotateSpeed={0.5}
