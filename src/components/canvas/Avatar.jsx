@@ -131,11 +131,6 @@ const ComputersCanvas = () => {
     );
   }
 
-  // Only show chat UI when model is loaded
-  if (!modelLoaded) {
-    return null;
-  }
-
   return (
     <ErrorBoundary FallbackComponent={CanvasErrorFallback}>
       <Canvas
