@@ -77,24 +77,48 @@ const useSpeechRecognition = () => {
   return { isListening, transcript, speechSupported, startListening, stopListening };
 };
 
-// TTS hook using browser TTS (free, can be upgraded to ElevenLabs/OpenAI)
+// TTS hook using browser TTS; drives lip-sync via word-boundary events
 const useTextToSpeech = () => {
   const speakRef = useRef(null);
 
-  const speak = useCallback((text, onEnd) => {
-    console.log("AvatarChat: Speaking text:", text);
-
-    if (speakRef.current) {
-      speechSynthesis.cancel();
-    }
+  const speak = useCallback((text, onEnd, onViseme) => {
+    if (speakRef.current) speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1;
     utterance.pitch = 1;
     utterance.volume = 1;
 
+    // Pick an English voice if available
+    const voices = speechSynthesis.getVoices();
+    const preferred = voices.find(v => /en-?us/i.test(v.lang) && /female|samantha|google/i.test(v.name))
+      || voices.find(v => /en/i.test(v.lang));
+    if (preferred) utterance.voice = preferred;
+
+    let decayTimer = null;
+    const pulse = (strength) => {
+      onViseme?.(strength);
+      if (decayTimer) clearTimeout(decayTimer);
+      decayTimer = setTimeout(() => onViseme?.(0.08), 140);
+    };
+
+    utterance.onstart = () => pulse(0.5);
+    utterance.onboundary = (e) => {
+      if (e.name !== "word") return;
+      const word = text.slice(e.charIndex, e.charIndex + (e.charLength || 4));
+      // Strength scales with word length + vowels (rough approximation of openness)
+      const vowels = (word.match(/[aeiouAEIOU]/g) || []).length;
+      const strength = Math.min(1, 0.35 + vowels * 0.15 + word.length * 0.03);
+      pulse(strength);
+    };
     utterance.onend = () => {
-      console.log("AvatarChat: Speech ended");
+      if (decayTimer) clearTimeout(decayTimer);
+      onViseme?.(0);
+      onEnd?.();
+    };
+    utterance.onerror = () => {
+      if (decayTimer) clearTimeout(decayTimer);
+      onViseme?.(0);
       onEnd?.();
     };
 
@@ -103,7 +127,6 @@ const useTextToSpeech = () => {
   }, []);
 
   const stop = useCallback(() => {
-    console.log("AvatarChat: Stopping speech");
     speechSynthesis.cancel();
   }, []);
 
@@ -248,7 +271,14 @@ const AvatarChat = ({ onVisemeUpdate }) => {
     setConversation((prev) => [...prev, { user: clean, ai: response }]);
     setIsThinking(false);
     setIsSpeaking(true);
-    speak(response, () => setIsSpeaking(false));
+    speak(
+      response,
+      () => {
+        setIsSpeaking(false);
+        onVisemeUpdate?.(0);
+      },
+      (level) => onVisemeUpdate?.(level)
+    );
   };
 
   const handleTextSubmit = (e) => {
@@ -289,19 +319,44 @@ const AvatarChat = ({ onVisemeUpdate }) => {
     sendToGroq(text);
   }, [isListening, transcript, isThinking]);
 
-  // Send mouth animation data to parent (3D model)
-  useEffect(() => {
-    if (onVisemeUpdate) {
-      onVisemeUpdate(isSpeaking ? 1 : 0); // 1 = open mouth, 0 = closed
-    }
-  }, [isSpeaking, onVisemeUpdate]);
+  // Viseme is driven directly from SpeechSynthesis word boundaries in sendToGroq/speak
 
   return (
-    <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-50 w-full max-w-md pointer-events-auto">
+    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-lg pointer-events-auto flex flex-col items-center gap-4">
+      {/* Transcript/AI response — lives above the bar as a sibling so it never overlaps */}
+      <AnimatePresence mode="wait">
+        {(lastUserText || aiResponse || isThinking) && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="w-full max-w-lg"
+          >
+            <div className="bg-[rgba(9,9,31,0.92)] backdrop-blur-lg rounded-2xl border border-white/10 px-4 py-3 shadow-xl">
+              {lastUserText && (
+                <div className="text-white/60 text-xs uppercase tracking-wide mb-1">You</div>
+              )}
+              {lastUserText && (
+                <div className="text-white/90 text-sm mb-2 break-words">{lastUserText}</div>
+              )}
+              {(aiResponse || isThinking) && (
+                <div className="text-cyan-300/70 text-xs uppercase tracking-wide mb-1">Arshiya</div>
+              )}
+              {isThinking && !aiResponse && (
+                <div className="text-cyan-300/80 text-sm italic">Thinking…</div>
+              )}
+              {aiResponse && (
+                <div className="text-cyan-200/95 text-sm break-words leading-relaxed">{aiResponse}</div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-4 bg-[rgba(9,9,31,0.85)] backdrop-blur-xl rounded-full border border-white/10 p-2"
+        className="w-full flex items-center gap-3 bg-[rgba(9,9,31,0.85)] backdrop-blur-xl rounded-full border border-white/10 p-2"
       >
         {/* Mic button */}
         <motion.button
@@ -374,38 +429,6 @@ const AvatarChat = ({ onVisemeUpdate }) => {
           </button>
         </form>
 
-        {/* Transcript/AI response - positioned above button */}
-        <AnimatePresence mode="wait">
-          {(lastUserText || aiResponse) && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="absolute -top-20 left-1/2 -translate-x-1/2 w-max max-w-xs"
-            >
-              <div className="bg-[rgba(9,9,31,0.95)] backdrop-blur-lg rounded-xl border border-white/10 px-4 py-3">
-                {lastUserText && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-white/80 text-sm mb-1"
-                  >
-                    {lastUserText}
-                  </motion.div>
-                )}
-                {aiResponse && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-cyan-300/90 text-sm"
-                  >
-                    {aiResponse}
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
     </div>
   );

@@ -97,8 +97,8 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
 
   if (!scene) return null;
 
-  const scale = isMobile ? [1.0, 1.0, 1.0] : [0.9, 0.9, 0.9];
-  const modelY = isMobile ? -1.1 : -1.0;
+  const scale = isMobile ? [0.95, 0.95, 0.95] : [0.85, 0.85, 0.85];
+  const modelY = isMobile ? -1.35 : -1.25;
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -130,23 +130,34 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
       }
     }
 
-    // Arm micro-movement
+    // Arm movement - bigger & more natural, extra gestures while speaking
+    const speaking = viseme > 0.01;
+    const gestureBoost = speaking ? 1 : 0;
     if (leftArmBone.current) {
       const init = initialRotations.current.get(leftArmBone.current.uuid);
-      if (init) leftArmBone.current.rotation.z = init.z + Math.sin(t * 0.9) * 0.02;
+      if (init) {
+        leftArmBone.current.rotation.z = init.z + Math.sin(t * 0.9) * (0.06 + 0.12 * gestureBoost);
+        leftArmBone.current.rotation.x = init.x + Math.sin(t * 1.3 + 0.5) * (0.03 + 0.08 * gestureBoost);
+        leftArmBone.current.rotation.y = init.y + Math.sin(t * 0.7) * (0.02 + 0.06 * gestureBoost);
+      }
     }
     if (rightArmBone.current) {
       const init = initialRotations.current.get(rightArmBone.current.uuid);
-      if (init) rightArmBone.current.rotation.z = init.z + Math.sin(t * 1.1 + 0.5) * 0.02;
+      if (init) {
+        rightArmBone.current.rotation.z = init.z + Math.sin(t * 1.1 + 0.5) * (0.06 + 0.12 * gestureBoost);
+        rightArmBone.current.rotation.x = init.x + Math.sin(t * 1.5 + 1.2) * (0.03 + 0.08 * gestureBoost);
+        rightArmBone.current.rotation.y = init.y + Math.sin(t * 0.8 + 1.0) * (0.02 + 0.06 * gestureBoost);
+      }
     }
 
-    // Lip-sync via mouthOpen morph when speaking (viseme > 0)
-    // Layered noise instead of pure sine so it doesn't look like a fish
-    const speechNoise =
-      Math.sin(t * 11) * 0.5 +
-      Math.sin(t * 17.3 + 1.2) * 0.3 +
-      Math.sin(t * 6.7 + 0.4) * 0.2;
-    const mouthTarget = viseme > 0 ? Math.max(0, 0.08 + speechNoise * 0.12) : 0;
+    // Lip-sync driven by viseme amplitude (pulsed per word from SpeechSynthesis onboundary).
+    // Small hi-freq modulation on top so it doesn't look mechanical.
+    const modulation =
+      Math.sin(t * 22) * 0.15 +
+      Math.sin(t * 13.7 + 0.6) * 0.1;
+    const mouthTarget = viseme > 0.01
+      ? Math.max(0, Math.min(0.9, viseme * 0.7 + modulation * viseme))
+      : 0;
     // Blink via morph if available (eyesClosed), else skip
     blinkTimer.current.next -= 1 / 60;
     let blinkValue = 0;
@@ -165,9 +176,15 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
       const dict = mesh.morphTargetDictionary;
       const infl = mesh.morphTargetInfluences;
       if (dict.mouthOpen !== undefined) {
-        infl[dict.mouthOpen] = THREE.MathUtils.lerp(infl[dict.mouthOpen], mouthTarget, 0.25);
+        const rate = mouthTarget > infl[dict.mouthOpen] ? 0.45 : 0.2;
+        infl[dict.mouthOpen] = THREE.MathUtils.lerp(infl[dict.mouthOpen], mouthTarget, rate);
       }
-      if (dict.mouthSmile !== undefined && viseme === 0) {
+      ["jawOpen", "mouthFunnel", "mouthPucker"].forEach((k) => {
+        if (dict[k] !== undefined) {
+          infl[dict[k]] = THREE.MathUtils.lerp(infl[dict[k]], mouthTarget * 0.6, 0.3);
+        }
+      });
+      if (dict.mouthSmile !== undefined && viseme < 0.01) {
         infl[dict.mouthSmile] = THREE.MathUtils.lerp(infl[dict.mouthSmile], 0.15, 0.02);
       }
       ["eyesClosed", "eyeBlinkLeft", "eyeBlinkRight"].forEach((k) => {
@@ -229,8 +246,8 @@ const ComputersCanvas = () => {
         shadows
         dpr={[1, 2]}
         camera={{
-          position: isMobile ? [0, 0.2, 3.5] : [0, 0.2, 3.2],
-          fov: isMobile ? 35 : 30
+          position: isMobile ? [0, 0.1, 4.8] : [0, 0.1, 4.2],
+          fov: isMobile ? 42 : 36
         }}
         gl={{ preserveDrawingBuffer: true, antialias: true }}
         className="z-10 w-full h-screen"
@@ -248,7 +265,7 @@ const ComputersCanvas = () => {
           <OrbitControls
             enableZoom={false}
             enablePan={false}
-            target={[0, 0.2, 0]}
+            target={[0, 0.1, 0]}
             maxPolarAngle={Math.PI / 2}
             minPolarAngle={Math.PI / 3}
             rotateSpeed={0.5}
