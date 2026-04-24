@@ -44,8 +44,11 @@ const Stars = (props) => {
     return validPositions;
   });
 
-  useFrame(() => {
-    // No rotation - stars stay still
+  useFrame((state, delta) => {
+    if (ref.current) {
+      ref.current.rotation.x -= delta / 10;
+      ref.current.rotation.y -= delta / 15;
+    }
   });
 
   return (

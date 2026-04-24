@@ -85,7 +85,7 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
     <mesh ref={modelRef}>
       <primitive
         object={scene}
-        position={[0, -1.5, 0]}
+        position={[0, -0.8, 0]}
         rotation={[-0.01, 0, 0]}
         material={{ color: "#FFFFFF" }}
         scale={scale}
@@ -143,11 +143,11 @@ const ComputersCanvas = () => {
         shadows
         dpr={[1, 2]}
         camera={{
-          position: isMobile ? [0, 1.5, 6] : [0, 1.2, 5.5],
-          fov: isMobile ? 45 : 45
+          position: isMobile ? [0, 0.8, 5] : [0, 0.5, 4.5],
+          fov: isMobile ? 50 : 45
         }}
         gl={{ preserveDrawingBuffer: true, antialias: true }}
-        className="z-10"
+        className="z-0"
         onCreated={({ gl }) => {
           gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         }}
