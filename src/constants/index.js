@@ -81,11 +81,12 @@ const workExperiences = [
     date: "2025",
     points: [
       "Worked across a 600-file / 102K LOC React + TypeScript SPA and 290-file / 28K LOC Express backend for BeX, an enterprise AI business execution platform for multi-tenant SaaS.",
-      "Designed the OpCode V2 CPIE schema — a JSON workflow language with step types (llm, api, memory, rag, subflow, choose), OEL expression syntax (@input.*, @step_id.*), conditional routing, and memory-augmented conversation threading backed by Redis.",
-      "Integrated 8+ LLM providers (OpenAI, Groq, Google Gemini, IBM WatsonX, Mistral, SambaNova, Cerebras, Novita) with per-step model selection and WebSocket token streaming to the frontend.",
+      "Built AI workflows using the OpCode V2 CPIE schema — a JSON workflow language with step types (llm, api, memory, rag, subflow, choose), OEL expression syntax (@input., @step_id.), conditional routing, and memory-augmented conversation threading backed by Redis.",
+      "Utilized 8+ LLM providers (OpenAI, Groq, Google Gemini, IBM WatsonX, Mistral, SambaNova, Cerebras, Novita) with per-step model selection and WebSocket token streaming to the frontend.",
+      "Developed on Perem LLMs using Rebilient Atom Max chips — conducted benchmarking and testing of chip capabilities.",
       "Built multi-tenant provisioning: organization lifecycle with Redis/Milvus namespace cloning, IBM Cloud Broker (OSB v2.12), Azure AD SSO via Passport.js, and role-based access across orgs and sub-orgs.",
-      "Integrated Stripe subscriptions, Soul Machines 3D AI avatar SDK, Milvus/Zilliz vector database, Elasticsearch, IBM Cloud Object Storage, and HashiCorp Vault for secrets management.",
-      "Shipped Playwright E2E tests against staging, enforced quality with ESLint + Husky pre-commit hooks, and deployed via GitOps (ArgoCD image updates + GitHub Actions).",
+      "Integrated Stripe subscriptions, Milvus/Zilliz vector database, Elasticsearch, IBM Cloud Object Storage, and HashiCorp Vault for secrets management.",
+      "Deployed on IBM Cloud OpenShift with Kubernetes, enforced quality with ESLint + Husky pre-commit hooks, and shipped Playwright E2E tests against staging via GitOps (ArgoCD image updates + GitHub Actions).",
     ],
   },
   {
