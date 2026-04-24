@@ -40,7 +40,7 @@ const Computers = ({ isMobile }) => {
   });
 
   // Scale: bigger on desktop, smaller on mobile
-  const scale = isMobile ? [3, 3, 3] : [1.5, 1.5, 1.5];
+  const scale = isMobile ? [1.8, 1.8, 1.8] : [1.1, 1.1, 1.1];
 
   // Set initial rotation to look left when loaded
   useEffect(() => {
