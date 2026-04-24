@@ -229,43 +229,51 @@ When asked about skills, experience, or projects, reference to resume above. Kee
 
 // Main Avatar Chat Component
 const AvatarChat = ({ onVisemeUpdate }) => {
-  const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [transcript, setTranscript] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [conversation, setConversation] = useState([]);
+  const [isThinking, setIsThinking] = useState(false);
+  const lastHandledRef = useRef("");
 
-  const { startListening, stopListening, speechSupported } = useSpeechRecognition();
-  const { speak, stop: stopSpeaking } = useTextToSpeech();
+  const {
+    isListening,
+    transcript,
+    startListening,
+    stopListening,
+    speechSupported,
+  } = useSpeechRecognition();
+  const { speak } = useTextToSpeech();
 
-  const handleMicClick = async () => {
+  const handleMicClick = () => {
     if (!speechSupported) {
       alert("Voice recognition is not supported. Please use Chrome, Edge, or Safari on desktop.");
       return;
     }
-
     if (isListening) {
       stopListening();
       return;
     }
-
-    setIsListening(true);
+    setAiResponse("");
     startListening();
-
-    // Wait for speech result
-    setTimeout(async () => {
-      if (transcript) {
-        const response = await GroqAPI.chat(transcript);
-        setAiResponse(response);
-        setConversation(prev => [...prev, { user: transcript, ai: response }]);
-        setIsSpeaking(true);
-        speak(response, () => {
-          setIsSpeaking(false);
-        });
-      }
-      setIsListening(false);
-    }, 5000); // 5 second timeout for speech
   };
+
+  // When listening ends with a transcript, send it to Groq
+  useEffect(() => {
+    if (isListening || isThinking) return;
+    const text = transcript?.trim();
+    if (!text || text === lastHandledRef.current) return;
+    lastHandledRef.current = text;
+
+    (async () => {
+      setIsThinking(true);
+      const response = await GroqAPI.chat(text);
+      setAiResponse(response);
+      setConversation((prev) => [...prev, { user: text, ai: response }]);
+      setIsThinking(false);
+      setIsSpeaking(true);
+      speak(response, () => setIsSpeaking(false));
+    })();
+  }, [isListening, transcript, isThinking, speak]);
 
   // Send mouth animation data to parent (3D model)
   useEffect(() => {
@@ -312,7 +320,7 @@ const AvatarChat = ({ onVisemeUpdate }) => {
             `}
           >
             <svg
-              className="w-3.5 h-3.5 text-white"
+              className="w-4 h-4 text-white"
               fill="none"
               stroke="currentColor"
               strokeWidth={2}
@@ -320,14 +328,10 @@ const AvatarChat = ({ onVisemeUpdate }) => {
               strokeLinejoin="round"
               viewBox="0 0 24 24"
             >
-              {isListening || isSpeaking ? (
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0 0 6h1a3 3 0 0 0 6z" />
-              ) : (
-                <>
-                  <path d="M12 1a3 3 0 0 0 3 3v8a3 3 0 0 6 0V4a3 3 0 0 0 0 3-3h1a3 3 0 0 0 6h1a3 3 0 0 6z" />
-                  <path d="M19 10v2a7 7 0 0 0 0 7 7h-4a7 7 0 0 0 0 7-7v-2" opacity={0.5} />
-                </>
-              )}
+              <rect x="9" y="2" width="6" height="12" rx="3" />
+              <path d="M5 10v2a7 7 0 0 0 14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
             </svg>
           </motion.div>
         </motion.button>
@@ -336,8 +340,9 @@ const AvatarChat = ({ onVisemeUpdate }) => {
         <div className="text-white/60 text-xs font-medium">
           {!speechSupported && "Voice not supported"}
           {speechSupported && isListening && "Listening..."}
+          {speechSupported && isThinking && "Thinking..."}
           {speechSupported && isSpeaking && "Speaking..."}
-          {speechSupported && !isListening && !isSpeaking && "Tap to talk"}
+          {speechSupported && !isListening && !isThinking && !isSpeaking && "Tap to talk"}
         </div>
 
         {/* Transcript/AI response - positioned above button */}
