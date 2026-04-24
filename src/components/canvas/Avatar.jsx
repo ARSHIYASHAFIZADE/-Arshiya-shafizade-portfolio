@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
 import { ErrorBoundary } from "react-error-boundary";
 import CanvasLoader from "../Loader";
+import AvatarChat from "./AvatarChat";
 import * as THREE from "three";
 
 // Fallback component when WebGL is not available
@@ -22,9 +23,10 @@ const CanvasErrorFallback = ({ error, resetErrorBoundary }) => (
   <WebGLFallback />
 );
 
-const Computers = ({ isMobile }) => {
+const Computers = ({ isMobile, viseme }) => {
   const { scene } = useGLTF("./Avatar/6756e17a1aa3af1c627b3bec.glb");
   const modelRef = useRef();
+  const headRef = useRef();
 
   // Check for model loading errors
   if (!scene) {
@@ -49,11 +51,28 @@ const Computers = ({ isMobile }) => {
     }
   }, []);
 
-  // Add rotation animation
-  useFrame(() => {
+  // Add rotation animation + lip-sync
+  useFrame(({ clock }) => {
     if (modelRef.current) {
       modelRef.current.rotation.y += 0.005;
       modelRef.current.scale.set(...scale);
+
+      // Simple lip-sync animation (jaw movement)
+      // When viseme > 0 (speaking), animate the jaw
+      if (viseme > 0 && headRef.current) {
+        const jawOpen = Math.sin(clock.getElapsedTime() * 15) * 0.05 + 0.08;
+        headRef.current.position.y = THREE.MathUtils.lerp(
+          headRef.current.position.y || 0,
+          jawOpen * 0.5,
+          0.2
+        );
+      } else if (headRef.current) {
+        headRef.current.position.y = THREE.MathUtils.lerp(
+          headRef.current.position.y || 0,
+          0,
+          0.1
+        );
+      }
     }
   });
 
@@ -65,6 +84,7 @@ const Computers = ({ isMobile }) => {
         rotation={[-0.01, 0, 0]}
         material={{ color: "#FFFFFF" }}
         scale={scale}
+        ref={headRef}
       />
       <meshStandardMaterial attach="shadow" color="#000000" />
     </mesh>
@@ -74,6 +94,7 @@ const Computers = ({ isMobile }) => {
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [webglSupported, setWebglSupported] = useState(true);
+  const [viseme, setViseme] = useState(0);
 
   useEffect(() => {
     // Check WebGL support
@@ -133,10 +154,13 @@ const ComputersCanvas = () => {
             minPolarAngle={Math.PI / 3}
             rotateSpeed={0.5}
           />
-          <Computers isMobile={isMobile} />
+          <Computers isMobile={isMobile} viseme={viseme} />
         </Suspense>
         <Preload all />
       </Canvas>
+
+      {/* Avatar Chat UI - overlays the canvas */}
+      <AvatarChat onVisemeUpdate={setViseme} />
     </ErrorBoundary>
   );
 };
