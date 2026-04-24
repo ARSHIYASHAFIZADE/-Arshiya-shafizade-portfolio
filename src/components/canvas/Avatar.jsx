@@ -142,7 +142,7 @@ const ComputersCanvas = () => {
           fov: isMobile ? 60 : 65
         }}
         gl={{ preserveDrawingBuffer: true, antialias: true }}
-        className="z-0"
+        className="z-0 w-full h-screen"
         onCreated={({ gl }) => {
           gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         }}

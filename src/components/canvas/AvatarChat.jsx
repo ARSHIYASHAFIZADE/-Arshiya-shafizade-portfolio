@@ -74,6 +74,8 @@ const useTextToSpeech = () => {
   const speakRef = useRef(null);
 
   const speak = useCallback((text, onEnd) => {
+    console.log("AvatarChat: Speaking text:", text);
+
     if (speakRef.current) {
       speechSynthesis.cancel();
     }
@@ -84,6 +86,7 @@ const useTextToSpeech = () => {
     utterance.volume = 1;
 
     utterance.onend = () => {
+      console.log("AvatarChat: Speech ended");
       onEnd?.();
     };
 
@@ -92,6 +95,7 @@ const useTextToSpeech = () => {
   }, []);
 
   const stop = useCallback(() => {
+    console.log("AvatarChat: Stopping speech");
     speechSynthesis.cancel();
   }, []);
 
@@ -177,6 +181,8 @@ Security: JWT, OAuth2, Azure AD SSO, HashiCorp Vault, Passport.js, WebSockets, S
 const GroqAPI = {
   async chat(userMessage) {
     const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+    console.log("AvatarChat: API key exists:", !!API_KEY);
+    console.log("AvatarChat: User message:", userMessage);
 
     if (!API_KEY) {
       console.error("VITE_GROQ_API_KEY not found in .env");
