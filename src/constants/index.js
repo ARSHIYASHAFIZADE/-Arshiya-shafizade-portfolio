@@ -108,6 +108,22 @@ const workExperiences = [
 const experiences = [
   {
     title: "Full Stack Developer",
+    company_name: "CoolRiots — BeX",
+    icon: "https://image.thum.io/get/width/100/crop/100/https://bex-system-design.vercel.app",
+    iconBg: "#0a2e2e",
+    date: "2024-2025",
+    points: [
+      "Worked across a 600-file / 102K LOC React + TypeScript SPA and 290-file / 28K LOC Express backend for BeX, an enterprise AI business execution platform for multi-tenant SaaS.",
+      "Built AI workflows using the OpCode V2 CPIE schema — a JSON workflow language with step types (llm, api, memory, rag, subflow, choose), OEL expression syntax (@input., @step_id.), conditional routing, and memory-augmented conversation threading backed by Redis.",
+      "Utilized 8+ LLM providers (OpenAI, Groq, Google Gemini, IBM WatsonX, Mistral, SambaNova, Cerebras, Novita) with per-step model selection and WebSocket token streaming to the frontend.",
+      "Developed on Perem LLMs using Rebilient Atom Max chips — conducted benchmarking and testing of chip capabilities.",
+      "Built multi-tenant provisioning: organization lifecycle with Redis/Milvus namespace cloning, IBM Cloud Broker (OSB v2.12), Azure AD SSO via Passport.js, and role-based access across orgs and sub-orgs.",
+      "Integrated Stripe subscriptions, Milvus/Zilliz vector database, Elasticsearch, IBM Cloud Object Storage, and HashiCorp Vault for secrets management.",
+      "Deployed on IBM Cloud OpenShift with Kubernetes, enforced quality with ESLint + Husky pre-commit hooks, and shipped Playwright E2E tests against staging via GitOps (ArgoCD image updates + GitHub Actions).",
+    ],
+  },
+  {
+    title: "Full Stack Developer",
     company_name: "Ashxcribe",
     icon: "https://image.thum.io/get/width/100/crop/100/https://scrum-tassk-automation.vercel.app",
     iconBg: "#1a1a2e",
