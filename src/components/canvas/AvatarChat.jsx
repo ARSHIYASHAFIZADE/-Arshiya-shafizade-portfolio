@@ -274,7 +274,7 @@ const AvatarChat = ({ onVisemeUpdate }) => {
   }, [isSpeaking, onVisemeUpdate]);
 
   return (
-    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-md">
+    <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-30 w-full max-w-md">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
