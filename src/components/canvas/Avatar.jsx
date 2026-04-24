@@ -78,8 +78,8 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
   });
 
   // Scale: bigger on desktop, smaller on mobile
-  const scale = isMobile ? [1.5, 1.5, 1.5] : [1.3, 1.3, 1.3];
-  const modelY = isMobile ? -1.6 : -1.5;
+  const scale = isMobile ? [1.0, 1.0, 1.0] : [0.9, 0.9, 0.9];
+  const modelY = isMobile ? -1.1 : -1.0;
 
   // Set initial rotation to look left when loaded
   useEffect(() => {

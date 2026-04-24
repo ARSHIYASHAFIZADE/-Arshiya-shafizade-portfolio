@@ -233,7 +233,30 @@ const AvatarChat = ({ onVisemeUpdate }) => {
   const [aiResponse, setAiResponse] = useState("");
   const [conversation, setConversation] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
+  const [typedText, setTypedText] = useState("");
+  const [lastUserText, setLastUserText] = useState("");
   const lastHandledRef = useRef("");
+
+  const sendToGroq = async (text) => {
+    if (!text?.trim() || isThinking) return;
+    const clean = text.trim();
+    setLastUserText(clean);
+    setAiResponse("");
+    setIsThinking(true);
+    const response = await GroqAPI.chat(clean);
+    setAiResponse(response);
+    setConversation((prev) => [...prev, { user: clean, ai: response }]);
+    setIsThinking(false);
+    setIsSpeaking(true);
+    speak(response, () => setIsSpeaking(false));
+  };
+
+  const handleTextSubmit = (e) => {
+    e.preventDefault();
+    const t = typedText;
+    setTypedText("");
+    sendToGroq(t);
+  };
 
   const {
     isListening,
@@ -263,17 +286,8 @@ const AvatarChat = ({ onVisemeUpdate }) => {
     const text = transcript?.trim();
     if (!text || text === lastHandledRef.current) return;
     lastHandledRef.current = text;
-
-    (async () => {
-      setIsThinking(true);
-      const response = await GroqAPI.chat(text);
-      setAiResponse(response);
-      setConversation((prev) => [...prev, { user: text, ai: response }]);
-      setIsThinking(false);
-      setIsSpeaking(true);
-      speak(response, () => setIsSpeaking(false));
-    })();
-  }, [isListening, transcript, isThinking, speak]);
+    sendToGroq(text);
+  }, [isListening, transcript, isThinking]);
 
   // Send mouth animation data to parent (3D model)
   useEffect(() => {
@@ -336,18 +350,33 @@ const AvatarChat = ({ onVisemeUpdate }) => {
           </motion.div>
         </motion.button>
 
-        {/* Status text - minimal */}
-        <div className="text-white/60 text-xs font-medium">
-          {!speechSupported && "Voice not supported"}
-          {speechSupported && isListening && "Listening..."}
-          {speechSupported && isThinking && "Thinking..."}
-          {speechSupported && isSpeaking && "Speaking..."}
-          {speechSupported && !isListening && !isThinking && !isSpeaking && "Tap to talk"}
-        </div>
+        {/* Text input fallback */}
+        <form onSubmit={handleTextSubmit} className="flex-1 flex items-center gap-2 pr-2">
+          <input
+            type="text"
+            value={typedText}
+            onChange={(e) => setTypedText(e.target.value)}
+            placeholder={
+              isThinking ? "Thinking..." :
+              isSpeaking ? "Speaking..." :
+              isListening ? "Listening..." :
+              "Type or tap mic to ask..."
+            }
+            disabled={isThinking}
+            className="flex-1 bg-transparent text-white text-sm placeholder:text-white/40 outline-none px-2 py-2 min-w-0"
+          />
+          <button
+            type="submit"
+            disabled={!typedText.trim() || isThinking}
+            className="text-white/70 hover:text-white disabled:opacity-30 text-xs font-medium px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 transition"
+          >
+            Send
+          </button>
+        </form>
 
         {/* Transcript/AI response - positioned above button */}
         <AnimatePresence mode="wait">
-          {(transcript || aiResponse) && (
+          {(lastUserText || aiResponse) && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -355,13 +384,13 @@ const AvatarChat = ({ onVisemeUpdate }) => {
               className="absolute -top-20 left-1/2 -translate-x-1/2 w-max max-w-xs"
             >
               <div className="bg-[rgba(9,9,31,0.95)] backdrop-blur-lg rounded-xl border border-white/10 px-4 py-3">
-                {transcript && (
+                {lastUserText && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="text-white/80 text-sm mb-1"
                   >
-                    {transcript}
+                    {lastUserText}
                   </motion.div>
                 )}
                 {aiResponse && (
