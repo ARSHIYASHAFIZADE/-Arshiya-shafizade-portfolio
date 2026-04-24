@@ -7,20 +7,49 @@ import AvatarChat from "./AvatarChat";
 import * as THREE from "three";
 
 // Fallback component when WebGL is not available
-const WebGLFallback = () => (
+const WebGLFallback = ({ error }) => (
   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900/30 to-purple-900/30 rounded-lg">
     <div className="text-center px-8 py-12">
       <div className="text-6xl mb-4 opacity-50">🎨</div>
-      <p className="text-white/70 text-sm max-w-xs leading-relaxed">
-        3D graphics not supported on this device. Please try on a computer with WebGL support.
+      <p className="text-white/70 text-sm max-w-md leading-relaxed">
+        3D graphics not supported on this device.
       </p>
+      {error && (
+        <div className="mt-4 p-4 bg-red-500/20 rounded-lg">
+          <p className="text-red-200 text-xs font-mono mb-2">Error details:</p>
+          <p className="text-white/90 text-sm break-all">{error}</p>
+          <p className="text-white/70 text-xs mt-3">
+            Possible fixes:
+          </p>
+          <ul className="text-left text-white/80 text-sm space-y-1">
+            <li>• Try Chrome, Edge, or Safari on desktop</li>
+            <li>• Enable hardware acceleration in browser settings</li>
+            <li>• Update GPU drivers if outdated</li>
+            <li>• Disable browser extensions that might block WebGL</li>
+          </ul>
+        </div>
+      )}
     </div>
   </div>
 );
 
 // Canvas error fallback
 const CanvasErrorFallback = ({ error, resetErrorBoundary }) => (
-  <WebGLFallback />
+  <div className="w-full h-screen flex items-center justify-center z-50">
+    <div className="text-center px-8 py-12 bg-red-500/20 rounded-xl max-w-md mx-4">
+      <div className="text-4xl mb-2">⚠️</div>
+      <p className="text-white font-medium mb-3">3D Scene Error</p>
+      <p className="text-white/80 text-sm mb-4">
+        {error?.message || "Something went wrong with the 3D scene."}
+      </p>
+      <button
+        onClick={resetErrorBoundary}
+        className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-red-600 font-medium transition-colors"
+      >
+        Retry
+      </button>
+    </div>
+  </div>
 );
 
 const Computers = ({ isMobile, viseme, onModelLoaded }) => {
