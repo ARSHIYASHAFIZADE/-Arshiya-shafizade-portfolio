@@ -53,7 +53,7 @@ const CanvasErrorFallback = ({ error, resetErrorBoundary }) => (
 );
 
 const Computers = ({ isMobile, viseme, onModelLoaded }) => {
-  const { scene } = useGLTF("./Avatar/6756e17a1aa3af1c627b3bec.glb");
+  const { scene } = useGLTF("./Avatar/avaturn.glb");
   const { mouse } = useThree();
   const modelRef = useRef();
   const headBone = useRef(null);
@@ -61,6 +61,9 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
   const spineBone = useRef(null);
   const leftArmBone = useRef(null);
   const rightArmBone = useRef(null);
+  const leftShoulderBone = useRef(null);
+  const rightShoulderBone = useRef(null);
+  const jawBone = useRef(null);
   const morphMeshes = useRef([]);
   const initialRotations = useRef(new Map());
   const blinkTimer = useRef({ next: 2 + Math.random() * 3, progress: 0 });
@@ -93,29 +96,33 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
       }
       if (node.isBone || node.type === "Bone") {
         const n = node.name.toLowerCase();
-        if (!headBone.current && n.includes("head")) headBone.current = node;
-        if (!neckBone.current && n.includes("neck")) neckBone.current = node;
-        if (!spineBone.current && (n === "spine" || n.endsWith("spine2") || n.endsWith("spine1"))) spineBone.current = node;
-        if (!leftArmBone.current && (n.includes("leftarm") || n.includes("left_arm") || n.includes("leftupperarm"))) leftArmBone.current = node;
-        if (!rightArmBone.current && (n.includes("rightarm") || n.includes("right_arm") || n.includes("rightupperarm"))) rightArmBone.current = node;
+        if (!headBone.current && n === "head") headBone.current = node;
+        if (!neckBone.current && n === "neck") neckBone.current = node;
+        if (!spineBone.current && n === "spine") spineBone.current = node;
+        if (!leftShoulderBone.current && (n === "leftshoulder" || n === "left_shoulder")) leftShoulderBone.current = node;
+        if (!rightShoulderBone.current && (n === "rightshoulder" || n === "right_shoulder")) rightShoulderBone.current = node;
+        if (!leftArmBone.current && (n === "leftarm" || n === "left_arm" || n === "leftupperarm")) leftArmBone.current = node;
+        if (!rightArmBone.current && (n === "rightarm" || n === "right_arm" || n === "rightupperarm")) rightArmBone.current = node;
+        if (!jawBone.current && (n === "jaw" || n.includes("jaw"))) jawBone.current = node;
       }
       if (node.isMesh && node.morphTargetInfluences && node.morphTargetDictionary) {
         morphMeshes.current.push(node);
       }
     });
-    [headBone, neckBone, spineBone, leftArmBone, rightArmBone].forEach((r) => {
+    [headBone, neckBone, spineBone, leftArmBone, rightArmBone, leftShoulderBone, rightShoulderBone, jawBone].forEach((r) => {
       if (r.current) initialRotations.current.set(r.current.uuid, r.current.rotation.clone());
     });
-    // Drop arms out of T-pose into a more natural resting posture
+    // Drop arms out of T-pose into a natural resting posture (Mixamo/Avaturn rig)
+    // Mixamo arms point outward along +/- X; rotating Z brings them down along the body.
     if (leftArmBone.current) {
-      leftArmBone.current.rotation.z += 1.1;
-      const init = leftArmBone.current.rotation.clone();
-      initialRotations.current.set(leftArmBone.current.uuid, init);
+      leftArmBone.current.rotation.z += 1.15;
+      leftArmBone.current.rotation.y += 0.05;
+      initialRotations.current.set(leftArmBone.current.uuid, leftArmBone.current.rotation.clone());
     }
     if (rightArmBone.current) {
-      rightArmBone.current.rotation.z -= 1.1;
-      const init = rightArmBone.current.rotation.clone();
-      initialRotations.current.set(rightArmBone.current.uuid, init);
+      rightArmBone.current.rotation.z -= 1.15;
+      rightArmBone.current.rotation.y -= 0.05;
+      initialRotations.current.set(rightArmBone.current.uuid, rightArmBone.current.rotation.clone());
     }
   }, [scene]);
 
@@ -149,8 +156,19 @@ const Computers = ({ isMobile, viseme, onModelLoaded }) => {
     if (headBone.current) {
       const init = initialRotations.current.get(headBone.current.uuid);
       if (init) {
-        headBone.current.rotation.y = THREE.MathUtils.lerp(headBone.current.rotation.y, init.y + targetYaw * 0.6, 0.1);
-        headBone.current.rotation.x = THREE.MathUtils.lerp(headBone.current.rotation.x, init.x + targetPitch * 0.6, 0.1);
+        // Speech-driven head bob + tilt when viseme is active (substitute for missing mouth morphs)
+        const speakBob = viseme > 0.01 ? Math.sin(t * 9) * viseme * 0.04 : 0;
+        const speakTilt = viseme > 0.01 ? Math.sin(t * 5.3) * viseme * 0.025 : 0;
+        headBone.current.rotation.y = THREE.MathUtils.lerp(headBone.current.rotation.y, init.y + targetYaw * 0.6 + speakTilt, 0.1);
+        headBone.current.rotation.x = THREE.MathUtils.lerp(headBone.current.rotation.x, init.x + targetPitch * 0.6 + speakBob, 0.1);
+      }
+    }
+    // If a jaw bone exists (some rigs), open it on viseme
+    if (jawBone.current) {
+      const init = initialRotations.current.get(jawBone.current.uuid);
+      if (init) {
+        const target = viseme > 0.01 ? init.x + viseme * 0.35 : init.x;
+        jawBone.current.rotation.x = THREE.MathUtils.lerp(jawBone.current.rotation.x, target, 0.4);
       }
     }
 
