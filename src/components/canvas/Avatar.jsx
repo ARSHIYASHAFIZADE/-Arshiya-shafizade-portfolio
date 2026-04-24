@@ -51,14 +51,12 @@ const Computers = ({ isMobile, viseme }) => {
     }
   }, []);
 
-  // Add rotation animation + lip-sync
+  // Add lip-sync animation (no rotation - model stays still)
   useFrame(({ clock }) => {
     if (modelRef.current) {
-      modelRef.current.rotation.y += 0.005;
       modelRef.current.scale.set(...scale);
 
       // Simple lip-sync animation (jaw movement)
-      // When viseme > 0 (speaking), animate the jaw
       if (viseme > 0 && headRef.current) {
         const jawOpen = Math.sin(clock.getElapsedTime() * 15) * 0.05 + 0.08;
         headRef.current.position.y = THREE.MathUtils.lerp(
@@ -132,8 +130,8 @@ const ComputersCanvas = () => {
         shadows
         dpr={[1, 2]}
         camera={{
-          position: isMobile ? [10, 5, 10] : [8, 4, 8],
-          fov: isMobile ? 35 : 40
+          position: isMobile ? [0, 2, 7] : [0, 1.5, 6],
+          fov: isMobile ? 45 : 50
         }}
         gl={{ preserveDrawingBuffer: true, antialias: true }}
         className="z-10"

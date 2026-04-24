@@ -253,72 +253,121 @@ const AvatarChat = ({ onVisemeUpdate }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-[rgba(9,9,31,0.9)] backdrop-blur-lg rounded-2xl border border-purple-500/30 p-4"
+        className="flex items-center gap-4 bg-[rgba(9,9,31,0.85)] backdrop-blur-xl rounded-full border border-white/10 p-2"
       >
-        {/* Transcript display */}
-        <AnimatePresence mode="wait">
-          {transcript && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mb-3 text-purple-200 text-sm"
+        {/* Mic button */}
+        <motion.button
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleMicClick}
+          className={`
+            w-14 h-14 rounded-full flex items-center justify-center
+            ${isListening || isSpeaking
+              ? "bg-white/10 border-white/30 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+              : "bg-white/5 border-white/10 hover:bg-white/10"
+            }
+            border transition-all duration-300 backdrop-blur-md
+          `}
+        >
+          <motion.div
+            animate={isListening || isSpeaking ? { scale: [1, 1.15, 1], opacity: [1, 0.8, 1] } : {}}
+            transition={{ duration: 1, repeat: isListening || isSpeaking ? Infinity : 0 }}
+            className={`
+              w-7 h-7 rounded-full flex items-center justify-center
+              ${isListening || isSpeaking
+                ? "bg-gradient-to-br from-red-500 to-pink-500"
+                : "bg-gradient-to-br from-purple-500 to-indigo-500"
+              }
+            `}
+          >
+            <svg
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              viewBox="0 0 24 24"
             >
-              You: {transcript}
-            </motion.div>
-          )}
-          {aiResponse && (
+              {isListening || isSpeaking ? (
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-6 6 3 3 0 0 0 3-3h1a3 3 0 0 0 0 6h1a3 3 0 0 0 0-6z" />
+              ) : (
+                <>
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-6 6 3 3 0 0 0 3-3h1a3 3 0 0 0 0 6h1a3 3 0 0 0 0-6z" />
+                  <path d="M19 10v2a7 7 0 0 0-7 7h-4a7 7 0 0 0-7-7v-2" opacity={0.5} />
+                </>
+              )}
+            </svg>
+          </motion.div>
+        </motion.button>
+
+        {/* Status text - minimal */}
+        <div className="text-white/60 text-xs font-medium">
+          {isListening && "Listening..."}
+          {isSpeaking && "Speaking..."}
+          {!isListening && !isSpeaking && "Tap to talk"}
+        </div>
+
+        {/* Visual sound wave when listening */}
+        <AnimatePresence>
+          {(isListening || isSpeaking) && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mb-3 text-cyan-200 text-sm"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              className="flex items-end gap-0.5 h-6"
             >
-              AI: {aiResponse}
+              {[1,2,3,4,5].map((i) => (
+                <motion.div
+                  key={i}
+                  animate={{
+                    height: [8, 16, 8, 20, 8],
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    repeat: Infinity,
+                    delay: i * 0.1,
+                  }}
+                  className="w-0.5 bg-gradient-to-t from-purple-400 to-cyan-400 rounded-full"
+                />
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Mic button */}
-        <div className="flex items-center justify-center gap-4">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleMicClick}
-            className={`
-              w-16 h-16 rounded-full flex items-center justify-center
-              ${isListening || isSpeaking
-                ? "bg-red-500/20 border-red-500/50"
-                : "bg-purple-500/20 border-purple-500/50"
-              }
-              border-2 backdrop-blur-md transition-all duration-300
-            `}
-          >
-            <motion.div
-              animate={isListening || isSpeaking ? { scale: [1, 1.2, 1] } : {}}
-              transition={{ duration: 0.8, repeat: isListening || isSpeaking ? Infinity : 0 }}
-              className={`text-2xl ${isListening || isSpeaking ? "text-red-400" : "text-purple-400"}`}
-            >
-              {isListening || isSpeaking ? "🔴" : "🎤"}
-            </motion.div>
-          </motion.button>
-
-          <div className="text-xs text-purple-300/60">
-            {isListening && "Listening..."}
-            {isSpeaking && "Speaking..."}
-            {!isListening && !isSpeaking && "Tap to talk"}
-          </div>
-        </div>
-
-        {/* Status indicator */}
-        <div className="mt-2 text-center">
-          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs ${
-            isListening || isSpeaking ? "bg-green-500/20 text-green-300" : "bg-slate-500/20 text-slate-400"
-          }`}>
-            <span className={`w-2 h-2 rounded-full ${isListening || isSpeaking ? "bg-green-400 animate-pulse" : "bg-slate-400"}`} />
-            {isSpeaking ? "Speaking" : isListening ? "Listening" : "Idle"}
-          </div>
-        </div>
       </motion.div>
+
+      {/* Transcript/AI response - positioned above button */}
+      <AnimatePresence mode="wait">
+        {(transcript || aiResponse) && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="absolute -top-20 left-1/2 -translate-x-1/2 w-max max-w-xs"
+          >
+            <div className="bg-[rgba(9,9,31,0.95)] backdrop-blur-lg rounded-xl border border-white/10 px-4 py-3">
+              {transcript && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-white/80 text-sm mb-1"
+                >
+                  {transcript}
+                </motion.div>
+              )}
+              {aiResponse && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-cyan-300/90 text-sm"
+                >
+                  {aiResponse}
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
