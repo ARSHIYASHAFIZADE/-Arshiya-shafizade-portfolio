@@ -130,134 +130,115 @@ const useSpeechRecognition = () => {
 const useTextToSpeech = () => {
   const speakRef = useRef(null);
   const voiceRef = useRef(null);
-  const [voicesLoaded, setVoicesLoaded] = useState(false);
 
-  const pickMaleVoice = useCallback(() => {
+  const pickVoice = useCallback(() => {
     const voices = speechSynthesis.getVoices();
     if (!voices.length) return null;
     const prefs = [
-      /google uk english male/i,
-      /google us english.*male/i,
-      /microsoft david/i,
-      /microsoft guy/i,
-      /microsoft mark/i,
-      /microsoft george/i,
-      /daniel/i,
-      /^alex$/i,
-      /^fred$/i,
-      /^thomas$/i,
-      /james/i,
-      /robert/i,
-      /male/i,
+      /google uk english male/i, /google us english/i,
+      /microsoft david/i, /microsoft guy/i, /microsoft mark/i,
+      /daniel/i, /^alex$/i, /^fred$/i, /james/i, /male/i,
     ];
     for (const p of prefs) {
       const v = voices.find(x => p.test(x.name) && /^en/i.test(x.lang));
       if (v) return v;
     }
-    const englishVoice = voices.find(v => /^en/i.test(v.lang));
-    return englishVoice || voices[0];
+    return voices.find(v => /^en/i.test(v.lang)) || voices[0];
   }, []);
 
   useEffect(() => {
-    const load = () => {
-      const voice = pickMaleVoice();
-      voiceRef.current = voice;
-      setVoicesLoaded(true);
-      console.log("AvatarChat: TTS voice selected:", voice?.name || "default");
-    };
-
+    const load = () => { voiceRef.current = pickVoice(); };
     load();
-    speechSynthesis.onvoiceschanged = load;
+    // addEventListener is safer than onvoiceschanged= (not clobbered by StrictMode)
+    speechSynthesis.addEventListener("voiceschanged", load);
+    return () => speechSynthesis.removeEventListener("voiceschanged", load);
+  }, [pickVoice]);
 
-    return () => {
-      speechSynthesis.onvoiceschanged = null;
-    };
-  }, [pickMaleVoice]);
-
-  // Chrome's TTS engine pauses after being idle; keep it alive
+  // Linux/Chrome bug: synthesis gets stuck in paused state mid-utterance.
+  // Poll every 250ms and resume if paused while we're expecting speech.
   useEffect(() => {
     const id = setInterval(() => {
-      if (!speechSynthesis.speaking && !speechSynthesis.pending) {
-        speechSynthesis.pause();
+      if (speakRef.current && speechSynthesis.paused) {
         speechSynthesis.resume();
       }
-    }, 10000);
+    }, 250);
     return () => clearInterval(id);
   }, []);
 
   const speak = useCallback((text, onEnd, onViseme) => {
-    if (!window.speechSynthesis) {
-      onEnd?.();
-      return;
-    }
+    if (!window.speechSynthesis) { onEnd?.(); return; }
 
-    // Cancel any current speech and clear the ref
     speechSynthesis.cancel();
     speakRef.current = null;
 
-    // Chrome silently drops speak() called immediately after cancel() —
-    // a 50ms gap gives the engine time to reset before the new utterance.
     setTimeout(() => {
+      // Linux/Chrome: synthesis can start in paused state — always resume first
+      if (speechSynthesis.paused) speechSynthesis.resume();
+
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 1.0;
       utterance.pitch = 0.95;
       utterance.volume = 1.0;
 
-      const voice = voiceRef.current || pickMaleVoice();
+      const voice = voiceRef.current || pickVoice();
       if (voice) utterance.voice = voice;
 
-      const vowelCount = (word) => (word.match(/[aeiouAEIOU]/g) || []).length;
-
+      const vowelCount = (w) => (w.match(/[aeiouAEIOU]/g) || []).length;
       let decayTimer = null;
-      const pulse = (strength) => {
-        onViseme?.(Math.max(0, Math.min(1, strength)));
+      const pulse = (s) => {
+        onViseme?.(Math.max(0, Math.min(1, s)));
         if (decayTimer) clearTimeout(decayTimer);
         decayTimer = setTimeout(() => onViseme?.(0.05), 120);
       };
 
-      utterance.onstart = () => { pulse(0.4); };
+      utterance.onstart = () => pulse(0.4);
 
       utterance.onboundary = (e) => {
         if (e.name !== "word") return;
         const word = text.slice(e.charIndex, e.charIndex + (e.charLength || 4));
-        const vowels = vowelCount(word);
         const wordLen = word.length;
-        let strength = 0.35;
-        if (/[aeiouyAEIOUY]/.test(word)) strength = 0.45 + vowels * 0.12;
-        if (/[pbtdkg]/g.test(word)) strength += 0.15;
-        if (/[fszv]/g.test(word))   strength += 0.08;
-        if (/[mn]/g.test(word))     strength -= 0.08;
-        if (wordLen <= 3) strength += 0.1;
-        if (wordLen >= 7) strength += 0.15;
-        strength += wordLen * 0.02;
-        pulse(Math.min(1, strength));
+        let s = 0.35;
+        if (/[aeiouyAEIOUY]/.test(word)) s = 0.45 + vowelCount(word) * 0.12;
+        if (/[pbtdkg]/.test(word)) s += 0.15;
+        if (/[fszv]/.test(word))   s += 0.08;
+        if (/[mn]/.test(word))     s -= 0.08;
+        if (wordLen <= 3) s += 0.1;
+        if (wordLen >= 7) s += 0.15;
+        s += wordLen * 0.02;
+        pulse(Math.min(1, s));
       };
 
       utterance.onend = () => {
         if (decayTimer) clearTimeout(decayTimer);
+        speakRef.current = null;
         onViseme?.(0);
         onEnd?.();
       };
 
       utterance.onerror = (e) => {
-        if (e.error === "interrupted") return; // expected when we cancel mid-speech
+        // "interrupted" fires when WE cancel to start new speech — ignore it,
+        // the new speak() call owns isSpeaking state from here
+        if (e.error === "interrupted") return;
         if (decayTimer) clearTimeout(decayTimer);
+        speakRef.current = null;
         onViseme?.(0);
         onEnd?.();
       };
 
       speakRef.current = utterance;
       speechSynthesis.speak(utterance);
-    }, 50);
-  }, [pickMaleVoice]);
+
+      // Resume immediately after speak() in case engine is paused (Linux bug)
+      if (speechSynthesis.paused) speechSynthesis.resume();
+    }, 100);
+  }, [pickVoice]);
 
   const stop = useCallback(() => {
-    if (window.speechSynthesis) {
-      speechSynthesis.cancel();
-    }
+    speechSynthesis.cancel();
+    speakRef.current = null;
   }, []);
 
-  return { speak, stop, voiceName: voiceRef.current?.name };
+  return { speak, stop };
 };
 
 const RESUME_CONTEXT = `ARSHIYA SHAFIZADE
