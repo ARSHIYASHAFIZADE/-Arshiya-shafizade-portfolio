@@ -191,7 +191,17 @@ const useTextToSpeech = () => {
         decayTimer = setTimeout(() => onViseme?.(0.05), 120);
       };
 
-      utterance.onstart = () => pulse(0.4);
+      // If speech never starts within 3s, TTS is unavailable — unblock the UI
+      const startTimeout = setTimeout(() => {
+        speakRef.current = null;
+        onViseme?.(0);
+        onEnd?.();
+      }, 3000);
+
+      utterance.onstart = () => {
+        clearTimeout(startTimeout);
+        pulse(0.4);
+      };
 
       utterance.onboundary = (e) => {
         if (e.name !== "word") return;
@@ -209,6 +219,7 @@ const useTextToSpeech = () => {
       };
 
       utterance.onend = () => {
+        clearTimeout(startTimeout);
         if (decayTimer) clearTimeout(decayTimer);
         speakRef.current = null;
         onViseme?.(0);
@@ -216,8 +227,7 @@ const useTextToSpeech = () => {
       };
 
       utterance.onerror = (e) => {
-        // "interrupted" fires when WE cancel to start new speech — ignore it,
-        // the new speak() call owns isSpeaking state from here
+        clearTimeout(startTimeout);
         if (e.error === "interrupted") return;
         if (decayTimer) clearTimeout(decayTimer);
         speakRef.current = null;
