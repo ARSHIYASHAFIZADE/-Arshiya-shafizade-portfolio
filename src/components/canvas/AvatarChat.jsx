@@ -142,23 +142,22 @@ const useTextToSpeech = () => {
 
     (async () => {
       try {
-        const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-        const res = await fetch("https://api.groq.com/openai/v1/audio/speech", {
+        const API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
+        const res = await fetch("https://api.elevenlabs.io/v1/text-to-speech/pNInz6obpgDQGcFmaJgB", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${API_KEY}`,
+            "xi-api-key": API_KEY,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "playai-tts",
-            input: text,
-            voice: "Fritz-PlayAI",
-            response_format: "mp3",
+            text,
+            model_id: "eleven_turbo_v2_5",
+            voice_settings: { stability: 0.45, similarity_boost: 0.8, style: 0.2 },
           }),
         });
 
         if (state.cancelled) return;
-        if (!res.ok) throw new Error(`Groq TTS ${res.status}`);
+        if (!res.ok) throw new Error(`ElevenLabs TTS ${res.status}`);
 
         const blob = await res.blob();
         if (state.cancelled) return;
