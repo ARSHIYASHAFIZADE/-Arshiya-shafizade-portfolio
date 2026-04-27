@@ -129,6 +129,7 @@ const useSpeechRecognition = () => {
 
 const useTextToSpeech = () => {
   const speakRef = useRef(null);
+  const audioCtxRef = useRef(null);
 
   const speak = useCallback((text, onEnd, onViseme) => {
     if (speakRef.current) {
@@ -165,18 +166,53 @@ const useTextToSpeech = () => {
         const url = URL.createObjectURL(blob);
         state.urls.push(url);
         const audio = new Audio(url);
+        audio.crossOrigin = "anonymous";
         state.audios.push(audio);
+
+        // Persistent AudioContext to avoid hitting browser limits
+        if (!audioCtxRef.current) {
+          audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        const ctx = audioCtxRef.current;
+        const source = ctx.createMediaElementSource(audio);
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 256;
+        source.connect(analyser);
+        analyser.connect(ctx.destination);
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
         let rafId = null;
         const animateViseme = () => {
-          if (state.cancelled) return;
+          if (state.cancelled || audio.paused || audio.ended) {
+            onViseme?.(0);
+            return;
+          }
+          
+          let volumeFactor = 0;
+          try {
+            analyser.getByteFrequencyData(dataArray);
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+            const average = sum / dataArray.length;
+            volumeFactor = Math.min(1, average / 40); 
+          } catch (e) {}
+          
           const t = audio.currentTime || 0;
-          const v = 0.3 + Math.sin(t * 13) * 0.28 + Math.sin(t * 7) * 0.12;
-          onViseme?.(Math.max(0.08, Math.min(0.9, v)));
+          // Guaranteed procedural motion whenever speaking
+          const procedural = 0.25 + (Math.sin(t * 14) * 0.2 + Math.sin(t * 7) * 0.1);
+          // Blend volume and procedural for the final viseme level
+          const v = volumeFactor > 0.1 
+            ? (volumeFactor * 0.6 + procedural * 0.4) 
+            : procedural;
+          
+          onViseme?.(Math.max(0, Math.min(0.95, v)));
           rafId = requestAnimationFrame(animateViseme);
         };
-        audio.onplay = () => animateViseme();
-        onViseme?.(0.35);
+
+        audio.onplay = () => {
+          if (ctx.state === "suspended") ctx.resume();
+          animateViseme();
+        };
 
         await new Promise((resolve) => {
           const guard = setTimeout(resolve, 120000);
@@ -256,7 +292,7 @@ PROJECTS & RESEARCH:
 
 3. ALF (Ash Loves Files) - Universal File Converter
    - 120+ formats across 8 categories, no account required, auto-delete after 1 hour
-   - FastAPI + Celery + Redis pipeline, Docker Compose, Railway deployment
+   - FastAPI + Celery + Redis pipeline, Docker Compose, Vercel & GitHub deployment
 
 TECHNICAL SKILLS:
 Languages/Frameworks: Python, JavaScript, TypeScript, Node.js, FastAPI, Express.js, React, Next.js

@@ -66,43 +66,43 @@ const SocialCard = ({ label, handle, href, description, color, icon, index }) =>
     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
     viewport={{ once: true }}
     whileHover={{ y: -5, transition: { duration: 0.25 } }}
-    className="flex items-center gap-5 p-5 rounded-2xl group"
+    className="flex items-center gap-5 p-5 rounded-2xl group relative overflow-hidden"
     style={{
       background: "rgba(9,9,31,0.85)",
-      border: "1px solid rgba(255,255,255,0.07)",
+      border: "1px solid rgba(255,255,255,0.08)",
       backdropFilter: "blur(12px)",
       boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
       cursor: "pointer",
     }}
     onMouseEnter={e => {
-      e.currentTarget.style.boxShadow = `0 16px 48px ${color}22, 0 4px 24px rgba(0,0,0,0.4)`;
-      e.currentTarget.style.borderColor = `${color}35`;
+      e.currentTarget.style.boxShadow = `0 16px 48px ${color}15, 0 4px 24px rgba(0,0,0,0.4)`;
+      e.currentTarget.style.borderColor = `${color}30`;
     }}
     onMouseLeave={e => {
       e.currentTarget.style.boxShadow = "0 4px 24px rgba(0,0,0,0.3)";
-      e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+      e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
     }}
   >
-    {/* Icon */}
+    {/* Icon Container */}
     <div
       className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110"
-      style={{ background: `${color}14`, border: `1px solid ${color}30`, color }}
+      style={{ background: `${color}10`, border: `1px solid ${color}25`, color }}
     >
       {icon}
     </div>
 
     {/* Text */}
     <div className="flex-1 min-w-0">
-      <p className="text-[11px] font-mono uppercase tracking-[0.18em] mb-0.5" style={{ color }}>
+      <p className="text-[10px] font-mono uppercase font-bold tracking-[0.2em] mb-1" style={{ color }}>
         {label}
       </p>
-      <p className="text-white font-semibold text-[14px]">{handle}</p>
-      <p className="text-slate-500 text-[12px] mt-0.5">{description}</p>
+      <p className="text-white font-bold text-[15px]">{handle}</p>
+      <p className="text-slate-500 text-[12.5px] mt-0.5 group-hover:text-slate-400 transition-colors">{description}</p>
     </div>
 
     {/* Arrow */}
     <motion.svg
-      className="w-5 h-5 flex-shrink-0 opacity-25 group-hover:opacity-90 transition-opacity duration-200"
+      className="w-5 h-5 flex-shrink-0 opacity-20 group-hover:opacity-100 transition-all duration-300"
       style={{ color }}
       viewBox="0 0 20 20"
       fill="none"

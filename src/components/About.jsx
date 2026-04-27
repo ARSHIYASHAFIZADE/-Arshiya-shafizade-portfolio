@@ -53,22 +53,112 @@ const paraVariants = {
   },
 };
 
+/* ── Custom Technical Icons ──────────────────────────────────────────────── */
+const ServiceIcon = ({ type, color }) => {
+  const props = { width: "42", height: "42", viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round" };
+  
+  if (type.includes("Backend")) {
+    return (
+      <svg {...props}>
+        <rect x="2" y="2" width="20" height="8" rx="2" />
+        <rect x="2" y="14" width="20" height="8" rx="2" />
+        <line x1="6" y1="6" x2="6" y2="6" />
+        <line x1="6" y1="18" x2="6" y2="18" />
+      </svg>
+    );
+  }
+  if (type.includes("LLM")) {
+    return (
+      <svg {...props}>
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        <path d="M8 9h8" /><path d="M8 13h6" />
+      </svg>
+    );
+  }
+  if (type.includes("ML")) {
+    return (
+      <svg {...props}>
+        <path d="M12 2v8" /><path d="M12 14v8" />
+        <path d="M2 12h8" /><path d="M14 12h8" />
+        <path d="M4.93 4.93l5.66 5.66" /><path d="M13.41 13.41l5.66 5.66" />
+        <path d="M19.07 4.93l-5.66 5.66" /><path d="M10.59 13.41l-5.66 5.66" />
+      </svg>
+    );
+  }
+  return (
+    <svg {...props}>
+      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+      <polyline points="2 17 12 22 22 17" />
+      <polyline points="2 12 12 17 22 12" />
+    </svg>
+  );
+};
+
 /* ── Service card ────────────────────────────────────────────────────────── */
-const ServiceCard = ({ index, title, icon }) => (
+const ServiceCard = ({ title, description, accent }) => (
   <Tilt
-    className="xs:w-[250px] w-full"
-    options={{ max: 45, scale: 1, speed: 450 }}
+    className="w-full"
+    options={{ max: 15, scale: 1.02, speed: 800, transition: true }}
   >
     <motion.div
-      variants={fadeIn("up", "spring", index * 0.5, 0.75)}
-      className="w-full bg-gradient-to-r from-blue-600 via-purple-700 to-pink-600 p-[3px] rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+      variants={fadeIn("up", "spring", 0, 0.75)}
+      className="w-full group relative"
     >
-      <div className="rounded-[20px] py-6 px-10 min-h-[300px] bg-[#1a1a1a] flex justify-center items-center flex-col">
-        <div className="relative w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-blue-400 flex justify-center items-center">
-          <img src={icon} alt={title} className="w-[70%] h-[70%] object-contain" />
-          <div className="absolute inset-0 rounded-full animate-pulse bg-gradient-to-r from-purple-500 to-blue-500 opacity-20" />
+      {/* Dynamic Glow Background */}
+      <div 
+        className="absolute -inset-0.5 rounded-2xl opacity-20 group-hover:opacity-100 transition duration-500 blur-xl"
+        style={{ background: `linear-gradient(45deg, ${accent}, transparent, ${accent})` }}
+      />
+      
+      <div 
+        className="relative rounded-2xl p-8 min-h-[320px] flex flex-col items-start gap-6 overflow-hidden"
+        style={{
+          background: "rgba(9,9,31,0.85)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          backdropFilter: "blur(12px)",
+        }}
+      >
+        {/* Animated Background Stream */}
+        <div className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none translate-x-8 -translate-y-8">
+           <div className="w-full h-full rotate-45" style={{ 
+             backgroundImage: `repeating-linear-gradient(90deg, ${accent} 0px, ${accent} 1px, transparent 1px, transparent 10px)` 
+           }} />
         </div>
-        <h3 className="text-white text-[22px] font-bold text-center mt-4">{title}</h3>
+
+        {/* Icon Container */}
+        <div 
+          className="w-16 h-16 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110"
+          style={{ 
+            background: `${accent}12`, 
+            border: `1px solid ${accent}30`,
+            boxShadow: `inset 0 0 20px ${accent}10`
+          }}
+        >
+          <ServiceIcon type={title} color={accent} />
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <h3 className="text-white text-[20px] font-bold leading-tight tracking-tight">
+            {title}
+          </h3>
+          <p className="text-slate-400 text-[13.5px] leading-relaxed">
+            {description}
+          </p>
+        </div>
+
+        {/* Bottom indicator */}
+        <div className="mt-auto pt-4 flex items-center gap-2 w-full">
+          <div className="h-0.5 flex-1 rounded-full bg-white/5 overflow-hidden">
+            <motion.div 
+              className="h-full rounded-full"
+              style={{ background: accent }}
+              initial={{ width: 0 }}
+              whileInView={{ width: "40%" }}
+              transition={{ duration: 1, delay: 0.5 }}
+            />
+          </div>
+          <span className="text-[10px] font-mono uppercase tracking-widest text-white/30">Expertise</span>
+        </div>
       </div>
     </motion.div>
   </Tilt>
@@ -152,11 +242,16 @@ const About = () => (
       </motion.p>
     </motion.div>
 
-    <div className="mt-20 flex flex-wrap gap-10">
-      {services.map((service, index) => (
-        <ServiceCard key={service.title} index={index} {...service} />
+    <motion.div 
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-100px" }}
+      className="mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+    >
+      {services.map((service) => (
+        <ServiceCard key={service.title} {...service} />
       ))}
-    </div>
+    </motion.div>
   </>
 );
 

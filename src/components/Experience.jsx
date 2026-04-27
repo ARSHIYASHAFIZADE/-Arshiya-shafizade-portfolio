@@ -148,12 +148,17 @@ const COMPANY_TECH = [
   {
     company: "Coolriots",
     color: "#a78bfa",
-    tags: ["TypeScript", "React", "Express", "Redis", "Milvus", "WebSocket", "Playwright", "ArgoCD", "GitHub Actions", "Passport.js", "Stripe", "Elasticsearch"],
+    tags: [
+      "JavaScript", "TypeScript", "React", "Next.js", "Node.js", "Express", 
+      "Python", "FastAPI", "PostgreSQL", "Redis", "Neo4j", "Milvus", 
+      "Docker", "Kubernetes", "OpenShift", "IBM Cloud", "Vault", 
+      "Elasticsearch", "ArgoCD", "Git", "GitHub", "Playwright"
+    ],
   },
   {
     company: "LeadAlways",
     color: "#38bdf8",
-    tags: ["TypeScript", "React", "Docker", "Nginx", "GitLab CI", "i18n", "Gemini AI", "Webpack", "Tailwind", "LDAP"],
+    tags: ["TypeScript", "React", "Docker", "Nginx", "GitLab CI", "i18n", "Gemini AI", "LDAP"],
   },
 ];
 
@@ -262,20 +267,20 @@ const ExperienceCard = ({ experience, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
       viewport={{ once: true, margin: "-60px" }}
-      className="relative rounded-2xl overflow-hidden flex flex-col lg:flex-row"
+      className="relative rounded-2xl overflow-hidden flex flex-col lg:flex-row group"
       style={{
         background: "rgba(9,9,31,0.85)",
-        border: "1px solid rgba(255,255,255,0.07)",
+        border: "1px solid rgba(255,255,255,0.08)",
         backdropFilter: "blur(12px)",
-        boxShadow: "0 8px 40px rgba(0,0,0,0.4)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = `0 20px 70px ${accent}22, 0 8px 40px rgba(0,0,0,0.5)`;
-        e.currentTarget.style.borderColor = `${accent}35`;
+        e.currentTarget.style.boxShadow = `0 20px 70px ${accent}15, 0 8px 40px rgba(0,0,0,0.4)`;
+        e.currentTarget.style.borderColor = `${accent}30`;
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = "0 8px 40px rgba(0,0,0,0.4)";
-        e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+        e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.3)";
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
       }}
     >
       {/* Animated accent top bar */}
@@ -285,88 +290,81 @@ const ExperienceCard = ({ experience, index }) => {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 + 0.3 }}
         viewport={{ once: true }}
         className="absolute top-0 left-0 right-0 h-[2px] origin-left z-20"
-        style={{ background: `linear-gradient(90deg, ${accent}, ${accent}70, transparent)` }}
+        style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}
       />
 
       {/* ── Left: Company identity panel ── */}
       <div
-        className="lg:w-[280px] shrink-0 flex flex-col items-center justify-center gap-6 px-8 py-10 relative border-b lg:border-b-0 lg:border-r"
+        className="lg:w-[320px] shrink-0 flex flex-col items-center justify-center gap-6 px-8 py-10 relative border-b lg:border-b-0 lg:border-r"
         style={{
-          background: `linear-gradient(145deg, ${accent}0f 0%, rgba(9,9,31,0) 70%)`,
-          borderColor: `${accent}18`,
+          background: `linear-gradient(145deg, ${accent}08 0%, rgba(9,9,31,0) 70%)`,
+          borderColor: "rgba(255,255,255,0.08)",
         }}
       >
-        {/* Dot-grid texture */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(${accent}18 1px, transparent 1px)`,
-            backgroundSize: "22px 22px",
-          }}
-        />
-
         {/* Ghost index number */}
         <div
-          className="absolute bottom-3 right-4 font-black leading-none select-none pointer-events-none"
-          style={{ fontSize: "72px", color: `${accent}0d`, lineHeight: 1 }}
+          className="absolute top-4 left-4 font-mono font-black text-[14px] opacity-20 tracking-tighter"
+          style={{ color: accent }}
         >
-          {num}
+          SYS_LOG // {num}
         </div>
 
         {/* Logo */}
-        <motion.img
-          src={experience.icon}
-          alt={experience.company_name}
-          className="relative z-10 max-w-[180px] h-auto"
-          style={{ filter: `drop-shadow(0 0 18px ${accent}40)` }}
-          whileHover={{ scale: 1.04, filter: `drop-shadow(0 0 28px ${accent}70)` }}
-          transition={{ duration: 0.35 }}
-        />
-
-        {/* Gradient rule */}
-        <div
-          className="relative z-10 w-full h-px"
-          style={{ background: `linear-gradient(90deg, transparent, ${accent}50, transparent)` }}
-        />
+        <div className="relative group/logo">
+          <div className="absolute inset-0 bg-white/5 blur-2xl rounded-full scale-0 group-hover/logo:scale-150 transition-transform duration-700 opacity-0 group-hover/logo:opacity-100" />
+          <motion.img
+            src={experience.icon}
+            alt={experience.company_name}
+            className="relative z-10 max-w-[180px] h-auto grayscale group-hover:grayscale-0 transition-all duration-700 brightness-110"
+            style={{ filter: `drop-shadow(0 0 15px ${accent}25)` }}
+            whileHover={{ scale: 1.05 }}
+          />
+        </div>
 
         {/* Role + company + date */}
         <div className="relative z-10 flex flex-col items-center gap-2 text-center">
-          <h3 className="text-white font-bold text-[17px] leading-snug">
+          <h3 className="text-white font-bold text-[19px] leading-tight tracking-tight">
             {experience.title}
           </h3>
-          <p className="text-[13px] font-mono font-semibold" style={{ color: accent }}>
+          <p className="text-[12px] font-mono font-black tracking-[0.2em] uppercase" style={{ color: accent }}>
             {experience.company_name}
           </p>
+          <div className="mt-4 flex flex-col gap-2 w-full max-w-[200px]">
+            {experience.metrics?.map((m, i) => (
+              <div key={i} className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.05]">
+                 <span className="text-[9px] font-mono text-slate-500 uppercase">{m.label}</span>
+                 <span className="text-[10.5px] font-mono font-bold text-white" style={{ textShadow: `0 0 8px ${accent}60` }}>{m.value}</span>
+              </div>
+            ))}
+          </div>
           <span
-            className="mt-1 px-3 py-1 rounded-full text-[11px] font-mono font-medium tracking-wide"
-            style={{
-              color: accent,
-              background: `${accent}14`,
-              border: `1px solid ${accent}35`,
-            }}
+            className="mt-4 px-4 py-1.5 rounded-full text-[10.5px] font-mono font-bold tracking-widest bg-white/[0.02] border border-white/[0.08] text-slate-400"
           >
             {experience.date}
           </span>
         </div>
       </div>
 
-      {/* ── Right: Bullet points ── */}
-      <div className="flex-1 flex flex-col justify-center gap-0 px-8 py-10">
-        <ul className="flex flex-col gap-3.5">
+      {/* ── Right: Content Area ── */}
+      <div className="flex-1 flex flex-col px-8 py-10 lg:px-12 bg-white/[0.01]">
+        {/* Bullet points */}
+        <ul className="flex flex-col gap-4 flex-1">
           {experience.points.map((point, i) => (
             <motion.li
               key={i}
-              initial={{ opacity: 0, x: 18 }}
+              initial={{ opacity: 0, x: 10 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 + 0.25 + i * 0.06 }}
+              transition={{ duration: 0.5, delay: index * 0.1 + 0.3 + i * 0.05 }}
               viewport={{ once: true }}
-              className="flex items-start gap-3"
+              className="flex items-start gap-4"
             >
-              <span
-                className="mt-[7px] w-[5px] h-[5px] rounded-full shrink-0"
-                style={{ background: accent, boxShadow: `0 0 7px ${accent}` }}
+              <div
+                className="mt-[7px] w-1.5 h-1.5 rounded-full shrink-0 animate-pulse"
+                style={{ background: accent, boxShadow: `0 0 10px ${accent}` }}
               />
-              <p className="text-slate-300 text-[13.5px] leading-relaxed">{point}</p>
+              <p className="text-slate-400 text-[14.5px] leading-relaxed group-hover:text-slate-200 transition-colors duration-300">
+                {point}
+              </p>
             </motion.li>
           ))}
         </ul>

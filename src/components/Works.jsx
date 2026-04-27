@@ -324,8 +324,7 @@ const ProjectSidebar = () => (
       </p>
       <div className="flex flex-col gap-3">
         {[
-          { name: "Vercel",  count: 2, icon: "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v11/icons/vercel.svg",  color: "#e2e8f0" },
-          { name: "Railway", count: 2, icon: "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v11/icons/railway.svg", color: "#a78bfa" },
+          { name: "Vercel",  count: 4, icon: "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v11/icons/vercel.svg",  color: "#e2e8f0" },
         ].map(({ name, count, icon, color }) => (
           <div key={name} className="flex items-center gap-3">
             <img src={icon} alt={name} className="w-4 h-4 object-contain opacity-80 brightness-0 invert" />
@@ -334,9 +333,6 @@ const ProjectSidebar = () => (
               {Array.from({ length: count }).map((_, i) => (
                 <span key={i} className="w-2 h-2 rounded-full"
                       style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
-              ))}
-              {Array.from({ length: 2 - count }).map((_, i) => (
-                <span key={i} className="w-2 h-2 rounded-full bg-white/10" />
               ))}
             </div>
             <span className="text-[11px] font-mono" style={{ color }}>{count}/4</span>
@@ -355,8 +351,8 @@ const ProjectCard = ({ project, index }) => {
 
   const overlayStyle = {
     background: isEven
-      ? `linear-gradient(to right, rgba(9,9,31,0) 30%, rgba(9,9,31,0.92) 100%)`
-      : `linear-gradient(to left,  rgba(9,9,31,0) 30%, rgba(9,9,31,0.92) 100%)`,
+      ? `linear-gradient(to right, rgba(9,9,31,0) 20%, rgba(9,9,31,0.95) 100%)`
+      : `linear-gradient(to left,  rgba(9,9,31,0) 20%, rgba(9,9,31,0.95) 100%)`,
   };
 
   return (
@@ -370,17 +366,17 @@ const ProjectCard = ({ project, index }) => {
       className="relative rounded-2xl overflow-hidden cursor-pointer group"
       style={{
         background: "rgba(9,9,31,0.85)",
-        border: "1px solid rgba(255,255,255,0.07)",
+        border: "1px solid rgba(255,255,255,0.08)",
         backdropFilter: "blur(12px)",
-        boxShadow: "0 8px 40px rgba(0,0,0,0.4)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = `0 20px 70px ${accent}22, 0 8px 40px rgba(0,0,0,0.5)`;
-        e.currentTarget.style.borderColor = `${accent}35`;
+        e.currentTarget.style.boxShadow = `0 20px 70px ${accent}15, 0 8px 40px rgba(0,0,0,0.4)`;
+        e.currentTarget.style.borderColor = `${accent}30`;
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = "0 8px 40px rgba(0,0,0,0.4)";
-        e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+        e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.3)";
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
       }}
     >
       <motion.div
@@ -389,7 +385,7 @@ const ProjectCard = ({ project, index }) => {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: index * 0.08 + 0.35 }}
         viewport={{ once: true }}
         className="absolute top-0 left-0 right-0 h-[2px] origin-left z-20"
-        style={{ background: `linear-gradient(90deg, ${accent}, ${accent}80, transparent)` }}
+        style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}
       />
 
       <div className={`flex flex-col ${isEven ? "lg:flex-row" : "lg:flex-row-reverse"}`}>
@@ -398,7 +394,7 @@ const ProjectCard = ({ project, index }) => {
           <motion.img
             src={project.image}
             alt={project.name}
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700"
             style={{ minHeight: "260px", maxHeight: "340px" }}
             whileHover={{ scale: 1.04 }}
             transition={{ duration: 0.65, ease: "easeOut" }}
@@ -409,38 +405,35 @@ const ProjectCard = ({ project, index }) => {
 
           <div
             className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full z-10"
-            style={{ background: "rgba(0,0,0,0.82)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.22)" }}
+            style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.15)" }}
           >
             <img src={project.icon} alt="platform" className="w-5 h-5 object-contain brightness-0 invert" />
-            <span className="text-white text-[12px] font-semibold tracking-wide">
-              {project.icon.includes("vercel") ? "Vercel" : project.icon.includes("github") ? "GitHub" : "Railway"}
+            <span className="text-white text-[11px] font-bold tracking-widest uppercase">
+              {project.icon.includes("vercel") ? "Vercel" : "GitHub"}
             </span>
-          </div>
-
-          <div className="absolute bottom-2 left-4 select-none pointer-events-none font-black leading-none z-10"
-               style={{ fontSize: "clamp(80px, 14vw, 130px)", color: `${accent}12`, lineHeight: 1 }}>
-            {num}
           </div>
         </div>
 
         <div className="lg:w-[44%] flex flex-col justify-center gap-4 p-7 lg:px-10 lg:py-10">
-          <span className="text-[11px] font-mono tracking-[0.22em] uppercase font-semibold" style={{ color: accent }}>
-            Project {num}
+          <span className="text-[10px] font-mono tracking-[0.3em] uppercase font-bold" style={{ color: accent }}>
+            PROJECT // {num}
           </span>
-          <h3 className="text-white font-bold leading-tight" style={{ fontSize: "clamp(20px, 2.8vw, 26px)" }}>
+          <h3 className="text-white font-bold leading-tight" style={{ fontSize: "clamp(20px, 2.5vw, 24px)" }}>
             {project.name}
           </h3>
-          <p className="text-slate-400 text-[13.5px] leading-relaxed">{project.description}</p>
+          <p className="text-slate-400 text-[13.5px] leading-relaxed group-hover:text-slate-300 transition-colors">
+            {project.description}
+          </p>
 
           <div className="flex flex-wrap gap-2 mt-1">
             {project.tags.map(tag => {
               const cfg = TECH[tag.name] || fallbackTech;
               return (
                 <span key={tag.name}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11.5px] font-mono font-medium"
-                  style={{ color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}` }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10.5px] font-mono font-medium"
+                  style={{ color: cfg.color, background: `${cfg.color}08`, border: `1px solid ${cfg.color}25` }}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  <span className="w-1 h-1 rounded-full flex-shrink-0"
                         style={{ background: cfg.color, boxShadow: `0 0 5px ${cfg.color}` }} />
                   {tag.name}
                 </span>
@@ -449,7 +442,7 @@ const ProjectCard = ({ project, index }) => {
           </div>
 
           <motion.div
-            className="mt-2 flex items-center gap-2 w-fit text-[13px] font-semibold"
+            className="mt-2 flex items-center gap-2 w-fit text-[12px] font-bold uppercase tracking-wider cursor-pointer"
             style={{ color: accent }}
             whileHover={{ x: 5, transition: { duration: 0.2 } }}
           >

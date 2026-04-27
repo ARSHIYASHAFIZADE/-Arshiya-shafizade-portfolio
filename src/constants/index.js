@@ -29,20 +29,28 @@ export const navLinks = [
 
 const services = [
   {
-    title: "Full Stack Developer",
-    icon: "https://cdn2.iconfinder.com/data/icons/seo-and-web-development-filled-outline/64/Backend-Development-Website-Server-Internet-1024.png",
+    title: "Backend & Systems Architect",
+    icon: "https://cdn-icons-png.flaticon.com/512/8637/8637099.png", // Temporary, will use custom SVG in component
+    description: "Designing distributed Node.js/FastAPI systems with focus on concurrency and performance.",
+    accent: "#38bdf8"
   },
   {
-    title: "AI / LLM Engineer",
-    icon: "https://cdn-icons-png.flaticon.com/512/8637/8637099.png",
-  },
-  {
-    title: "3D Creative Developer",
+    title: "AI / LLM Workflow Engineer",
     icon: "https://cdn-icons-png.flaticon.com/512/1728/1728765.png",
+    description: "Architecting agentic RAG pipelines and custom workflow engines using multi-provider LLM stacks.",
+    accent: "#a78bfa"
   },
   {
-    title: "ML Engineer",
+    title: "ML & Clinical Data Science",
     icon: "https://cdn-icons-png.flaticon.com/512/4824/4824797.png",
+    description: "Building production-grade diagnostic ML models with focus on health informatics and classification.",
+    accent: "#34d399"
+  },
+  {
+    title: "3D Immersive Developer",
+    icon: "https://cdn-icons-png.flaticon.com/512/2103/2103633.png",
+    description: "Bridging creative design with WebGL and React Three Fiber for high-fidelity interactive experiences.",
+    accent: "#f97316"
   },
 ];
 
@@ -79,14 +87,20 @@ const workExperiences = [
     icon: "/coolriots.png",
     iconBg: "#060e1a",
     date: "2025",
+    metrics: [
+      { label: "Codebase", value: "102K LOC" },
+      { label: "AI Models", value: "8+ Providers" },
+      { label: "Architecture", value: "Multi-Tenant" }
+    ],
+    tags: ["React", "TypeScript", "Express", "Redis", "Milvus", "LLMs", "ArgoCD", "Kubernetes"],
     points: [
-      "Worked across a 600-file / 102K LOC React + TypeScript SPA and 290-file / 28K LOC Express backend for BeX, an enterprise AI business execution platform for multi-tenant SaaS.",
-      "Built AI workflows using the OpCode V2 CPIE schema — a JSON workflow language with step types (llm, api, memory, rag, subflow, choose), OEL expression syntax (@input., @step_id.), conditional routing, and memory-augmented conversation threading backed by Redis.",
-      "Utilized 8+ LLM providers (OpenAI, Groq, Google Gemini, IBM WatsonX, Mistral, SambaNova, Cerebras, Novita) with per-step model selection and WebSocket token streaming to the frontend.",
+      "Worked across a 600-file / 102K LOC React + TypeScript SPA and 290-file / 28K LOC Express backend for BeX, an enterprise AI business execution platform.",
+      "Built AI workflows using the OpCode V2 CPIE schema — a JSON workflow language with complex conditional routing and memory-augmented conversation threading.",
+      "Utilized 8+ LLM providers (OpenAI, Groq, Gemini, WatsonX, Mistral) with per-step model selection and WebSocket token streaming.",
       "Developed on Perem LLMs using Rebilient Atom Max chips — conducted benchmarking and testing of chip capabilities.",
-      "Built multi-tenant provisioning: organization lifecycle with Redis/Milvus namespace cloning, IBM Cloud Broker (OSB v2.12), Azure AD SSO via Passport.js, and role-based access across orgs and sub-orgs.",
-      "Integrated Stripe subscriptions, Milvus/Zilliz vector database, Elasticsearch, IBM Cloud Object Storage, and HashiCorp Vault for secrets management.",
-      "Deployed on IBM Cloud OpenShift with Kubernetes, enforced quality with ESLint + Husky pre-commit hooks, and shipped Playwright E2E tests against staging via GitOps (ArgoCD image updates + GitHub Actions).",
+      "Built multi-tenant provisioning: organization lifecycle with Redis/Milvus namespace cloning and Azure AD SSO via Passport.js.",
+      "Integrated Stripe, Milvus vector database, Elasticsearch, IBM Cloud Object Storage, and HashiCorp Vault.",
+      "Deployed on IBM Cloud OpenShift with Kubernetes, enforced quality with ESLint + Husky, and shipped Playwright E2E tests via GitOps.",
     ],
   },
   {
@@ -95,13 +109,19 @@ const workExperiences = [
     icon: "/leadalways.png",
     iconBg: "#0d1a2e",
     date: "2024 – 2025",
+    metrics: [
+      { label: "Admin Modules", value: "30+" },
+      { label: "Performance", value: "Vite/React 19" },
+      { label: "Scope", value: "Enterprise" }
+    ],
+    tags: ["React", "Gemini AI", "Docker", "i18next", "Nginx", "GitLab CI", "LDAP"],
     points: [
-      "Built the full React + TypeScript frontend for LeadAlways ECM (edms.leadalways.tech), a production enterprise document management platform.",
-      "Designed a visual workflow builder with approval engine, scheduling with timezone support, webhook triggers, and conditional metadata logic.",
-      "Developed a dynamic form builder with drag-and-drop field types, conditional visibility rules, and real-time submission handling.",
-      "Integrated Google Gemini AI SDK for document processing assistance and intelligent content suggestions within the editor.",
-      "Built 30+ admin configuration modules covering LDAP, document encryption, external storage, federation, background jobs, and e-signature (Libresign/eSign).",
-      "Implemented full i18n support with i18next and configured Docker + Nginx deployment with a GitLab CI/CD pipeline.",
+      "Built the full React + TypeScript frontend for LeadAlways ECM, a production enterprise document management platform.",
+      "Designed a visual workflow builder with approval engine, scheduling with timezone support, and conditional metadata logic.",
+      "Developed a dynamic form builder with drag-and-drop field types and real-time submission handling.",
+      "Integrated Google Gemini AI SDK for document processing assistance and intelligent content suggestions.",
+      "Built 30+ admin configuration modules covering LDAP, document encryption, external storage, and e-signature.",
+      "Implemented full i18n support and configured Docker + Nginx deployment with a GitLab CI/CD pipeline.",
     ],
   },
 ];
