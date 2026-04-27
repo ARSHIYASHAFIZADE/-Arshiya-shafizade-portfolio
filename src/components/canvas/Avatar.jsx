@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, Preload, useGLTF, Environment, ContactShadows } from "@react-three/drei";
+import { OrbitControls, Preload, useGLTF, Environment, ContactShadows, useProgress } from "@react-three/drei";
 import { ErrorBoundary } from "react-error-boundary";
 import CanvasLoader from "../Loader";
 import AvatarChat from "./AvatarChat";
@@ -320,6 +320,7 @@ const ComputersCanvas = () => {
   const [viseme, setViseme] = useState(0);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [webglSupported, setWebglSupported] = useState(true);
+  const { progress } = useProgress();
 
   useEffect(() => {
     const canvas = document.createElement("canvas");
@@ -407,17 +408,30 @@ const ComputersCanvas = () => {
       </Canvas>
 
       {!modelLoaded && (
-        <div className="absolute bottom-8 right-8 z-30 flex items-center gap-2 pointer-events-none">
-          <div className="flex gap-1">
-            {[0, 0.15, 0.3].map((d) => (
-              <span
-                key={d}
-                className="w-1.5 h-1.5 rounded-full bg-cyan-400/50"
-                style={{ animation: `pulse 1.4s ${d}s ease-in-out infinite` }}
+        <div className="absolute bottom-8 right-8 z-30 flex flex-col items-center gap-1.5 pointer-events-none">
+          <div className="relative w-11 h-11">
+            <svg className="w-11 h-11 -rotate-90" viewBox="0 0 44 44">
+              <circle
+                cx="22" cy="22" r="18"
+                fill="none"
+                stroke="rgba(255,255,255,0.08)"
+                strokeWidth="3"
               />
-            ))}
+              <circle
+                cx="22" cy="22" r="18"
+                fill="none"
+                stroke="rgba(146,248,243,0.75)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeDasharray={`${2 * Math.PI * 18}`}
+                strokeDashoffset={`${2 * Math.PI * 18 * (1 - progress / 100)}`}
+                style={{ transition: "stroke-dashoffset 0.35s ease" }}
+              />
+            </svg>
+            <span className="absolute inset-0 flex items-center justify-center text-white/55 text-[10px] font-medium tabular-nums">
+              {Math.round(progress)}%
+            </span>
           </div>
-          <span className="text-white/30 text-xs tracking-wider">Loading</span>
         </div>
       )}
       {modelLoaded && <AvatarChat onVisemeUpdate={setViseme} />}

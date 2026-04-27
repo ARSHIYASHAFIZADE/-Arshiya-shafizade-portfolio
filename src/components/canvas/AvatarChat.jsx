@@ -174,6 +174,16 @@ const useTextToSpeech = () => {
     };
   }, [pickMaleVoice]);
 
+  const unlock = useCallback(() => {
+    if (!window.speechSynthesis) return;
+    // Chrome blocks TTS until the page has been "activated" by a user gesture.
+    // Speaking a silent utterance synchronously inside a click/keydown handler
+    // activates it for the rest of the session (including async callbacks).
+    const u = new SpeechSynthesisUtterance('');
+    u.volume = 0;
+    speechSynthesis.speak(u);
+  }, []);
+
   const speak = useCallback((text, onEnd, onViseme) => {
     if (!window.speechSynthesis) {
       console.warn("AvatarChat: SpeechSynthesis not supported");
@@ -275,7 +285,7 @@ const useTextToSpeech = () => {
     }
   }, []);
 
-  return { speak, stop, voiceName: voiceRef.current?.name };
+  return { speak, stop, unlock, voiceName: voiceRef.current?.name };
 };
 
 const RESUME_CONTEXT = `ARSHIYA SHAFIZADE
@@ -500,7 +510,7 @@ const AvatarChat = ({ onVisemeUpdate }) => {
     browserInfo,
   } = useSpeechRecognition();
 
-  const { speak, stop } = useTextToSpeech();
+  const { speak, stop, unlock } = useTextToSpeech();
 
   const speakResponse = useCallback((text) => {
     setIsSpeaking(true);
@@ -540,6 +550,7 @@ const AvatarChat = ({ onVisemeUpdate }) => {
 
   const handleTextSubmit = (e) => {
     e.preventDefault();
+    unlock(); // activate TTS in user gesture context before the async call
     if (inputText.trim()) sendToGroq(inputText);
   };
 
@@ -557,6 +568,7 @@ const AvatarChat = ({ onVisemeUpdate }) => {
 
   const handleMicClick = () => {
     setError("");
+    unlock(); // activate TTS in user gesture context
     // Clicking mic while avatar is speaking stops it
     if (isSpeaking) {
       stop();
