@@ -328,7 +328,7 @@ const ProjectSidebar = () => (
           { name: "Railway", count: 2, icon: "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v11/icons/railway.svg", color: "#a78bfa" },
         ].map(({ name, count, icon, color }) => (
           <div key={name} className="flex items-center gap-3">
-            <img src={icon} alt={name} className="w-4 h-4 object-contain opacity-80" />
+            <img src={icon} alt={name} className="w-4 h-4 object-contain opacity-80 brightness-0 invert" />
             <span className="text-slate-300 text-[12px] font-medium flex-1">{name}</span>
             <div className="flex gap-1">
               {Array.from({ length: count }).map((_, i) => (
@@ -411,7 +411,7 @@ const ProjectCard = ({ project, index }) => {
             className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full z-10"
             style={{ background: "rgba(0,0,0,0.82)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.22)" }}
           >
-            <img src={project.icon} alt="platform" className="w-5 h-5 object-contain" />
+            <img src={project.icon} alt="platform" className="w-5 h-5 object-contain brightness-0 invert" />
             <span className="text-white text-[12px] font-semibold tracking-wide">
               {project.icon.includes("vercel") ? "Vercel" : project.icon.includes("github") ? "GitHub" : "Railway"}
             </span>
