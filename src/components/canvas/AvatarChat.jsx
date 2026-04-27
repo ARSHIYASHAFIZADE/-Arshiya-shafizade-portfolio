@@ -174,109 +174,81 @@ const useTextToSpeech = () => {
     };
   }, [pickMaleVoice]);
 
-  const unlock = useCallback(() => {
-    if (!window.speechSynthesis) return;
-    // Chrome blocks TTS until the page has been "activated" by a user gesture.
-    // Speaking a silent utterance synchronously inside a click/keydown handler
-    // activates it for the rest of the session (including async callbacks).
-    const u = new SpeechSynthesisUtterance('');
-    u.volume = 0;
-    speechSynthesis.speak(u);
+  // Chrome's TTS engine pauses after being idle; keep it alive
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (!speechSynthesis.speaking && !speechSynthesis.pending) {
+        speechSynthesis.pause();
+        speechSynthesis.resume();
+      }
+    }, 10000);
+    return () => clearInterval(id);
   }, []);
 
   const speak = useCallback((text, onEnd, onViseme) => {
     if (!window.speechSynthesis) {
-      console.warn("AvatarChat: SpeechSynthesis not supported");
       onEnd?.();
       return;
     }
 
-    if (speakRef.current) {
-      speechSynthesis.cancel();
-    }
+    // Cancel any current speech and clear the ref
+    speechSynthesis.cancel();
+    speakRef.current = null;
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.0;
-    utterance.pitch = 0.95;
-    utterance.volume = 1.0;
+    // Chrome silently drops speak() called immediately after cancel() —
+    // a 50ms gap gives the engine time to reset before the new utterance.
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 0.95;
+      utterance.volume = 1.0;
 
-    if (!voiceRef.current) {
-      voiceRef.current = pickMaleVoice();
-    }
-    if (voiceRef.current) {
-      utterance.voice = voiceRef.current;
-    }
+      const voice = voiceRef.current || pickMaleVoice();
+      if (voice) utterance.voice = voice;
 
-    const vowelCount = (word) => (word.match(/[aeiouAEIOU]/g) || []).length;
-    const consonantCount = (word) => word.length - vowelCount(word);
+      const vowelCount = (word) => (word.match(/[aeiouAEIOU]/g) || []).length;
 
-    let decayTimer = null;
-    const pulse = (strength) => {
-      onViseme?.(Math.max(0, Math.min(1, strength)));
-      if (decayTimer) clearTimeout(decayTimer);
-      decayTimer = setTimeout(() => onViseme?.(0.05), 120);
-    };
+      let decayTimer = null;
+      const pulse = (strength) => {
+        onViseme?.(Math.max(0, Math.min(1, strength)));
+        if (decayTimer) clearTimeout(decayTimer);
+        decayTimer = setTimeout(() => onViseme?.(0.05), 120);
+      };
 
-    utterance.onstart = () => {
-      pulse(0.4);
-    };
+      utterance.onstart = () => { pulse(0.4); };
 
-    utterance.onboundary = (e) => {
-      if (e.name !== "word") return;
+      utterance.onboundary = (e) => {
+        if (e.name !== "word") return;
+        const word = text.slice(e.charIndex, e.charIndex + (e.charLength || 4));
+        const vowels = vowelCount(word);
+        const wordLen = word.length;
+        let strength = 0.35;
+        if (/[aeiouyAEIOUY]/.test(word)) strength = 0.45 + vowels * 0.12;
+        if (/[pbtdkg]/g.test(word)) strength += 0.15;
+        if (/[fszv]/g.test(word))   strength += 0.08;
+        if (/[mn]/g.test(word))     strength -= 0.08;
+        if (wordLen <= 3) strength += 0.1;
+        if (wordLen >= 7) strength += 0.15;
+        strength += wordLen * 0.02;
+        pulse(Math.min(1, strength));
+      };
 
-      const word = text.slice(e.charIndex, e.charIndex + (e.charLength || 4));
-      const vowels = vowelCount(word);
-      const consonants = consonantCount(word);
-      const wordLen = word.length;
+      utterance.onend = () => {
+        if (decayTimer) clearTimeout(decayTimer);
+        onViseme?.(0);
+        onEnd?.();
+      };
 
-      let strength = 0.35;
+      utterance.onerror = (e) => {
+        if (e.error === "interrupted") return; // expected when we cancel mid-speech
+        if (decayTimer) clearTimeout(decayTimer);
+        onViseme?.(0);
+        onEnd?.();
+      };
 
-      const hasOpenSound = /[aeiouyAEIOUY]/.test(word);
-      if (hasOpenSound) {
-        strength = 0.45 + (vowels * 0.12);
-      }
-
-      const plosives = /[pbtdkg]/g.test(word);
-      if (plosives) {
-        strength += 0.15;
-      }
-
-      const fricatives = /[fszv]/g.test(word);
-      if (fricatives) {
-        strength += 0.08;
-      }
-
-      const nasals = /[mn]/g.test(word);
-      if (nasals) {
-        strength -= 0.08;
-      }
-
-      const shortWord = wordLen <= 3;
-      const longWord = wordLen >= 7;
-
-      if (shortWord) strength += 0.1;
-      if (longWord) strength += 0.15;
-
-      strength += wordLen * 0.02;
-
-      pulse(Math.min(1, strength));
-    };
-
-    utterance.onend = () => {
-      if (decayTimer) clearTimeout(decayTimer);
-      onViseme?.(0);
-      onEnd?.();
-    };
-
-    utterance.onerror = (e) => {
-      console.error("AvatarChat: TTS error:", e);
-      if (decayTimer) clearTimeout(decayTimer);
-      onViseme?.(0);
-      onEnd?.();
-    };
-
-    speakRef.current = utterance;
-    speechSynthesis.speak(utterance);
+      speakRef.current = utterance;
+      speechSynthesis.speak(utterance);
+    }, 50);
   }, [pickMaleVoice]);
 
   const stop = useCallback(() => {
@@ -285,7 +257,7 @@ const useTextToSpeech = () => {
     }
   }, []);
 
-  return { speak, stop, unlock, voiceName: voiceRef.current?.name };
+  return { speak, stop, voiceName: voiceRef.current?.name };
 };
 
 const RESUME_CONTEXT = `ARSHIYA SHAFIZADE
@@ -510,7 +482,7 @@ const AvatarChat = ({ onVisemeUpdate }) => {
     browserInfo,
   } = useSpeechRecognition();
 
-  const { speak, stop, unlock } = useTextToSpeech();
+  const { speak, stop } = useTextToSpeech();
 
   const speakResponse = useCallback((text) => {
     setIsSpeaking(true);
@@ -550,7 +522,6 @@ const AvatarChat = ({ onVisemeUpdate }) => {
 
   const handleTextSubmit = (e) => {
     e.preventDefault();
-    unlock(); // activate TTS in user gesture context before the async call
     if (inputText.trim()) sendToGroq(inputText);
   };
 
@@ -568,7 +539,6 @@ const AvatarChat = ({ onVisemeUpdate }) => {
 
   const handleMicClick = () => {
     setError("");
-    unlock(); // activate TTS in user gesture context
     // Clicking mic while avatar is speaking stops it
     if (isSpeaking) {
       stop();
